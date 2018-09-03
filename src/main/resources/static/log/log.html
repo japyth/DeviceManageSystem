@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>设备管理平台</title>
+    <link rel="stylesheet" href="log.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../lib/datetimepicker/css/tempusdominus-bootstrap-4.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../lib/datetimepicker/css/font-awesome.css" crossorigin="anonymous">
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(69,161,168,1);">
+    <a href="#" class="navbar-brand mb-0 h1"><img src="../lib/image/seal.png" style="width:45px;margin-right: 15px"/>综合安防海豹设备管理平台</a>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="../index.html">主页</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="log.html">日志</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+<div id="app">
+
+
+    <div class="form-inline">
+        <div class="label-group">
+            <label class="col-form-label">开始时间：</label>
+        </div>
+        <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+            <input id="startTime" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1"/>
+            <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            </div>
+        </div>
+
+        <div class="label-group">
+            <label class="col-form-label">结束时间：</label>
+        </div>
+        <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+            <input id="endTime" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker2"/>
+            <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            </div>
+        </div>
+
+        <div class="label-group">
+            <label class="col-form-label">查询条件：</label>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="searchValue"/>
+        </div>
+
+        <div class="form-group">
+            <button type="button" class="btn btn-outline-dark" v-on:click="showPage(1,$event,true)" style="margin: 20px 0 20px 20px">查询
+            </button>
+        </div>
+    </div>
+
+    <table class="table table-hover" style="word-break:break-all;">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" style="width: 5%">序号</th>
+                <th scope="col" style="width: 70%">内容</th>
+                <th scope="col" style="width: 15%">时间</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(item, index) in logList">
+                <th scope="row">{{ index + 1 }}</th>
+                <td>{{ item.remark }}</td>
+                <td>{{ item.updateTime }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="pager" id="pager">
+        <span>
+            <select  class="btn btn-outline-dark dropdown-toggle btn-sm" v-model="pagesize" v-on:change="showPage(pageCurrent,$event,true)" number>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+            </select>
+        </span>
+        <span v-for="item in pageCount">
+            <span v-if="item==1" class="btn btn-outline-dark btn-sm" v-on:click="showPage(1,$event)" :class="{'disabled':fDisabled}">首页</span>
+            <span v-if="item==1" class="btn btn-outline-dark btn-sm" v-on:click="showPage(pageCurrent-1,$event)" :class="{'disabled':fDisabled}">上一页</span>
+            <span v-if="item==1" class="btn btn-outline-dark btn-sm" v-on:click="showPage(item,$event)">{{item}}</span>
+            <span v-if="item==1&&item<showPagesStart-1" class="btn btn-outline-dark btn-sm disabled">...</span>
+            <span v-if="item>1&&item<=pageCount-1&&item>=showPagesStart&&item<=showPageEnd&&item<=pageCount" class="btn btn-outline-dark btn-sm" v-on:click="showPage(item,$event)">{{item}}</span>
+            <span v-if="item==pageCount&&item>showPageEnd+1" class="btn btn-outline-dark btn-sm disabled">...</span>
+            <span v-if="item==pageCount&&pageCount!=1" class="btn btn-outline-dark btn-sm" v-on:click="showPage(item,$event)"  >{{item}}</span>
+            <span v-if="item==pageCount" class="btn btn-outline-dark btn-sm" v-on:click="showPage(pageCurrent+1,$event)" :class="{'disabled':lDisabled}">下一页</span>
+            <span v-if="item==pageCount" class="btn btn-outline-dark btn-sm" v-on:click="showPage(pageCount,$event)" :class="{'disabled':lDisabled}">尾页</span>
+        </span>
+        <span class="btn btn-outline-dark btn-sm disabled">{{pageCurrent}}/{{pageCount}}</span>
+    </div>
+
+</div>
+<script src="../lib/moment/moment.min.js"></script>
+<script src="../lib/vue/vue.js" crossorigin="anonymous"></script>
+<script src="../lib/jquery/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="../lib/popper/popper.min.js" crossorigin="anonymous"></script>
+<script src="../lib/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="../lib/datetimepicker/js/tempusdominus-bootstrap-4.min.js" crossorigin="anonymous"></script>
+<script src="../js/const.js"></script>
+<script src="log.js"></script>
+
+</body>
+</html>
