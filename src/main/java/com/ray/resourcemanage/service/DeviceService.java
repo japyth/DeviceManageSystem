@@ -25,10 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @ProjectName: resourcemanage
- * @address: http://www.hikvision.com
- * @Auther: jiangsong7
- * @Date: 2018/8/2 16:59
  * @Description:
  */
 @Service

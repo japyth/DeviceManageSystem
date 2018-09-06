@@ -18,8 +18,12 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         httpServletResponse.setContentType("application/json;charset=utf-8");
+        // 允许跨域
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        // 允许自定义请求头token(允许head跨域)
+        httpServletResponse.setHeader("Access-Control-Allow-Headers", "token, Accept, Origin, X-Requested-With, Content-Type, Last-Modified");
         PrintWriter out = httpServletResponse.getWriter();
-        out.write("{\"status\":\"ok\",\"msg\":\"登录成功\"}");
+        out.write("{\"result\":true}");
         out.flush();
         out.close();
     }

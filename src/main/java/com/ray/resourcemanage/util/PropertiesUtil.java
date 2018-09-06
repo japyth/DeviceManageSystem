@@ -9,10 +9,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * @ProjectName: resourcemanage
- * @address: http://www.hikvision.com
- * @Auther: jiangsong7
- * @Date: 2018/8/24 16:59
  * @Description:
  */
 public class PropertiesUtil {

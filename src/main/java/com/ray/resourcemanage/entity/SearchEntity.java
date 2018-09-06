@@ -5,10 +5,6 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * @ProjectName: resourcemanage
- * @address: http://www.hikvision.com
- * @Auther: jiangsong7
- * @Date: 2018/8/21 14:19
  * @Description:
  */
 public class SearchEntity {

@@ -9,10 +9,6 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @ProjectName: resourcemanage
- * @address: http://www.hikvision.com
- * @Auther: jiangsong7
- * @Date: 2018/8/2 16:55
  * @Description: 记录增删改查
  */
 public interface IDeviceDao extends JpaRepository<Device, Serializable>,JpaSpecificationExecutor<Device> {

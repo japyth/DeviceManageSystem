@@ -13,10 +13,6 @@ import java.util.Date;
 import java.util.Properties;
 
 /**
- * @ProjectName: resourcemanage
- * @address: http://www.hikvision.com
- * @Auther: jiangsong7
- * @Date: 2018/8/24 16:24
  * @Description: 数据库定时任务，备份数据库
  */
 public class DbTask extends QuartzJobBean {

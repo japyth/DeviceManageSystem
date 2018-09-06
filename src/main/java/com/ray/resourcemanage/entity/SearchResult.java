@@ -3,10 +3,6 @@ package com.ray.resourcemanage.entity;
 import java.util.List;
 
 /**
- * @ProjectName: resourcemanage
- * @address: http://www.hikvision.com
- * @Auther: jiangsong7
- * @Date: 2018/8/21 14:45
  * @Description:
  */
 public class SearchResult<Object> {
