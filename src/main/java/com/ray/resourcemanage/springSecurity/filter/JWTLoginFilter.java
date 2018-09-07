@@ -1,7 +1,6 @@
 package com.ray.resourcemanage.springSecurity.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ray.resourcemanage.springSecurity.entity.LoginUser;
 import com.ray.resourcemanage.springSecurity.entity.SysUser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,10 +11,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -32,13 +29,14 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
         try {
-            String username = req.getParameter("username");
-            String password = req.getParameter("password");
+            SysUser user = new ObjectMapper()
+                    .readValue(req.getInputStream(), SysUser.class);
+
 
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            username,
-                            password,
+                            user.getUsername(),
+                            user.getPassword(),
                             new ArrayList<>())
             );
         } catch (Exception e) {
@@ -51,7 +49,7 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest req,
                                             HttpServletResponse res,
                                             FilterChain chain,
-                                            Authentication auth) throws IOException, ServletException {
+                                            Authentication auth)  {
 
         String token = Jwts.builder()
                 .setSubject(((SysUser) auth.getPrincipal()).getUsername())

@@ -1,14 +1,9 @@
 package com.ray.resourcemanage.springSecurity.config;
 
-import com.ray.resourcemanage.springSecurity.Handler.MyAuthenticationFailHandler;
-import com.ray.resourcemanage.springSecurity.Handler.MyAuthenticationSuccessHandler;
 import com.ray.resourcemanage.springSecurity.filter.JWTAuthenticationFilter;
 import com.ray.resourcemanage.springSecurity.filter.JWTLoginFilter;
-import com.ray.resourcemanage.springSecurity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,24 +11,20 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    private MyAuthenticationFailHandler myAuthenticationFailHandler;
+    private JWTAuthenticationFilter jwtAuthenticationFilter;
     @Autowired
-    private MyAuthenticationSuccessHandler myAuthenticationSuccessHandler;
-
-    @Bean
-    UserDetailsService userService() {
-        return new UserService();
-    }
+    private UserDetailsService userService;
 
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService()).passwordEncoder(new BCryptPasswordEncoder());
+        auth.userDetailsService(userService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Override
@@ -46,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll()
                 .and()
                 .addFilter(new JWTLoginFilter(authenticationManager()))
-                .addFilter(new JWTAuthenticationFilter( authenticationManager()))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 // 不需要session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();

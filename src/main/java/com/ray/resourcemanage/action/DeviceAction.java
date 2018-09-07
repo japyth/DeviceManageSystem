@@ -2,6 +2,7 @@ package com.ray.resourcemanage.action;
 
 import com.ray.resourcemanage.constant.ConstResponse;
 import com.ray.resourcemanage.dao.IDeviceDao;
+import com.ray.resourcemanage.dto.DeviceDto;
 import com.ray.resourcemanage.entity.Device;
 import com.ray.resourcemanage.entity.SearchEntity;
 import com.ray.resourcemanage.entity.SearchResult;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,7 +49,12 @@ public class DeviceAction {
     private Log log = LogFactory.getLog(this.getClass());
 
     @RequestMapping("/getAllDevice")
-    public BaseResponse getAllDevice(String deviceStatus, String deviceType, String searchValue, Integer pagesize, Integer pageIndex) {
+    public BaseResponse getAllDevice(@RequestBody DeviceDto deviceDto) {
+        String deviceStatus = deviceDto.getDeviceStatus();
+        String deviceType = deviceDto.getDeviceType();
+        String searchValue = deviceDto.getSearchValue();
+        Integer pagesize = deviceDto.getPagesize();
+        Integer pageIndex = deviceDto.getPageIndex();
         SearchEntity searchEntity = new SearchEntity();
         if (StringUtils.isEmpty(deviceStatus)&&StringUtils.isEmpty(deviceType)) {
             searchEntity.setSearchOther(null);

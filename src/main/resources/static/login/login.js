@@ -9,15 +9,17 @@ var vm = new Vue({
     },
     methods: {
         loginButton: function () {
-            var param = {
-                username:vm.userName,
-                password:vm.password,
-            };
-            $.post(getHost() + "login", param)
-               /* .done(function (data) {
-                    if(data)
-                })*/
+            axios.post('/login', {
+                username: vm.userName,
+                password: vm.password
+            })
+                .then(function (response) {
+                    if(response.headers.authorization){
+                        localStorage.setItem("token",response.headers.authorization);
+                        window.location.href = "/index.html";
+                    }
 
+                });
         },
         init: function () {
 

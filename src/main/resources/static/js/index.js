@@ -52,16 +52,15 @@ var vm = new Vue({
 
                 //查询和分页参数
                 var searchValue = $('#searchValue').val();
-                var search = {
+                //分页数据
+                axios.post("api/device/getAllDevice",{
                     deviceStatus: vm.deviceStatus,
                     searchValue: searchValue,
                     deviceType: vm.deviceType,
                     pageIndex: pageIndex,
                     pagesize: vm.pagesize
-                };
-                //分页数据
-                $.post(getHost() + "api/device/getAllDevice", search)
-                    .done(function (data) {
+                })
+                    .then(function (data) {
                         if (data.result === true) {
                             vm.deviceList = data.data.rows;
                             if (vm.deviceList.length === 0) {
