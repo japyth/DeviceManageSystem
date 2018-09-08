@@ -28,13 +28,13 @@
 <div id="app">
 
     <!--查询-->
-    <div class="form-inline">
+    <div class="form-inline" style="margin-top: 20px;margin-bottom: 20px">
         <div class="form-group mb-2">
-            <button type="button" class="btn btn-outline-primary" @click="openAddDialog" style="margin: 20px 0 20px 20px">添加设备
+            <button v-show="showUser" type="button" class="btn btn-outline-primary" @click="openAddDialog" style="margin-left: 20px">添加设备
             </button>
         </div>
 
-        <div class="form-group mb-2" style="width: 50%;margin-left: 25%">
+        <div class="form-group mb-2" style="width: 50%;margin-left: 25%" >
             <div class="form-group">
                 <select class="form-control" v-model="deviceStatus" v-on:change="showPage(1,$event,true)">
                     <option value="0">所有设备</option>
@@ -74,7 +74,7 @@
                 <th scope="col" style="width: 10%">借用者</th>
                 <th scope="col" style="width: 10%">备注</th>
                 <th scope="col" style="width: 10%">修改时间</th>
-                <th scope="col" style="width: 15%">操作</th>
+                <th scope="col" style="width: 15%" v-show="showUser">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -87,7 +87,7 @@
                 <td>{{ item.borrower }}</td>
                 <td>{{ item.remark }}</td>
                 <td>{{ item.updateTime }}</td>
-                <td>
+                <td v-show="showUser">
                     <div v-if="item.back">
                         <button type="button" class="btn btn-outline-success btn-sm" @click="borrowButton(item)">借出</button>
                         <button type="button" class="btn btn-outline-dark btn-sm" @click="modifyButton(item)">修改</button>

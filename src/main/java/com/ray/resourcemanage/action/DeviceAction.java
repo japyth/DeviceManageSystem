@@ -16,6 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +39,7 @@ import java.util.function.Function;
 @RequestMapping("api/device")
 @CrossOrigin
 public class DeviceAction {
-
+    private static final String ROLE_VISITOR = "ROLE_ANONYMOUS";
     @Autowired
     private DeviceService deviceService;
 
@@ -50,6 +55,7 @@ public class DeviceAction {
 
     @RequestMapping("/getAllDevice")
     public BaseResponse getAllDevice(@RequestBody DeviceDto deviceDto) {
+
         String deviceStatus = deviceDto.getDeviceStatus();
         String deviceType = deviceDto.getDeviceType();
         String searchValue = deviceDto.getSearchValue();
@@ -72,7 +78,21 @@ public class DeviceAction {
         searchEntity.setPageIndex(pageIndex);
         searchEntity.setPageSize(pagesize);
         SearchResult<Device> searchResult = deviceService.findByPageAndParams(searchEntity);
-        return new BaseResponse(searchResult);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>)authentication.getAuthorities();
+        if(authorities.size() == 1 && authorities.get(0).getAuthority().equals(ROLE_VISITOR)){
+            String username = "游客";
+            return new BaseResponse(searchResult,username,null);
+        } else {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            List<String> roles = new ArrayList<>();
+            for (GrantedAuthority authority : authorities) {
+                roles.add(authority.getAuthority());
+            }
+            return new BaseResponse(searchResult,username,roles);
+        }
     }
 
     //添加设备（默认已归还）

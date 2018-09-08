@@ -1,6 +1,9 @@
 var vm = new Vue({
     el: '#app',
     data: {
+        username: "visitor",
+        showAdmin:false,
+        showUser:false,
         deviceList: [],         //table列表
         device: {},             //新增的设备
         deviceStatus: 0,       //设备状态
@@ -23,7 +26,7 @@ var vm = new Vue({
         //开始显示的分页按钮
         showPagesStart: 1,
         //结束显示的分页按钮
-        showPageEnd: 20,
+        showPageEnd: 20
     },
     created: function () {
         this.init();
@@ -53,16 +56,26 @@ var vm = new Vue({
                 //查询和分页参数
                 var searchValue = $('#searchValue').val();
                 //分页数据
-                axios.post("api/device/getAllDevice",{
+                axios.post("api/device/getAllDevice", {
                     deviceStatus: vm.deviceStatus,
                     searchValue: searchValue,
                     deviceType: vm.deviceType,
                     pageIndex: pageIndex,
                     pagesize: vm.pagesize
+                },{
+                    headers: {
+                        "Authorization" : localStorage.getItem("token")
+                    }
                 })
-                    .then(function (data) {
-                        if (data.result === true) {
+                    .then(function (response) {
+                        if (response.data.result === true) {
+                            var data = response.data;
                             vm.deviceList = data.data.rows;
+                            vm.username = data.username;
+                            var roleList = data.roles;
+                            if(roleList!==null){
+                                vm.showAuth(roleList);
+                            }
                             if (vm.deviceList.length === 0) {
                                 alert("查询结果为空，请检查SQL")
                             }else{
@@ -119,6 +132,18 @@ var vm = new Vue({
                         vm.showPagesStart = pageIndex - (vm.showPages - 3) / 2;
                         vm.showPageEnd = pageIndex + (vm.showPages - 3) / 2;
                     }
+                }
+            }
+        },
+        //判断用户具有哪些权限
+        showAuth: function (roleList) {
+            debugger;
+            for(var i in roleList) {
+                if(roleList[i] === "user") {
+                    vm.showUser = true;
+                }
+                if(roleList[i] === "admin") {
+                    vm.showAdmin = true;
                 }
             }
         },
