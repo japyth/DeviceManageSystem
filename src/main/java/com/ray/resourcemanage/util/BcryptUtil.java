@@ -3,9 +3,8 @@ package com.ray.resourcemanage.util;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class BcryptUtil {
-    public static void main(String[] args) {
-        String password = "111";
+    public String bcryptEncode(String password) {
         String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
-        System.out.println(hashed);
+        return hashed;
     }
 }

@@ -32,7 +32,6 @@ public class DeviceService {
     @Autowired
     private IDeviceDao deviceDao;
 
-
     public void saveDevice(Device device) {
         deviceDao.save(device);
     }

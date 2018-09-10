@@ -137,7 +137,6 @@ var vm = new Vue({
         },
         //判断用户具有哪些权限
         showAuth: function (roleList) {
-            debugger;
             for(var i in roleList) {
                 if(roleList[i] === "user") {
                     vm.showUser = true;

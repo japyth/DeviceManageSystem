@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>设备管理平台</title>
-    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="lib/datetimepicker/css/font-awesome.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../lib/datetimepicker/css/font-awesome.css" crossorigin="anonymous">
 </head>
 <body>
 
@@ -15,13 +15,13 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">主页</a>
+                <a class="nav-link" href="../index.html">主页</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="log/log.html">日志</a>
+                <a class="nav-link" href="../log/log.html">日志</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="user/user.html">用户管理</a>
+            <li class="nav-item active">
+                <a class="nav-link" href="user.html">用户管理</a>
             </li>
         </ul>
     </div>
@@ -33,34 +33,12 @@
     <!--查询-->
     <div class="form-inline" style="margin-top: 20px;margin-bottom: 20px">
         <div class="form-group mb-2">
-            <button v-show="showUser" type="button" class="btn btn-outline-primary" @click="openAddDialog" style="margin-left: 20px">添加设备
+            <button type="button" class="btn btn-outline-primary" @click="openAddDialog" style="margin-left: 20px">添加用户
             </button>
         </div>
 
         <div class="form-group mb-2" style="width: 50%;margin-left: 25%" >
-            <div class="form-group">
-                <select class="form-control" v-model="deviceStatus" v-on:change="showPage(1,$event,true)">
-                    <option value="0">所有设备</option>
-                    <option value="1">可借设备</option>
-                    <option value="2">借出设备</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <select class="form-control" v-model="deviceType" v-on:change="showPage(1,$event,true)">
-                    <option value="设备类型">设备类型</option>
-                    <option value="门禁">门禁</option>
-                    <option value="访客">访客</option>
-                    <option value="可视对讲">可视对讲</option>
-                    <option value="动环">动环</option>
-                    <option value="梯控">梯控</option>
-                    <option value="消费">消费</option>
-                    <option value="视频">视频</option>
-                    <option value="停车场">停车场</option>
-                    <option value="书籍">书籍</option>
-                    <option value="其他">其他</option>
-                </select>
-            </div>
-            <input id="searchValue" v-model="searchValue" type="text" class="form-control" placeholder="搜索  (设备名称/设备类型/序列号/拥有者/借用者/备注)" style="width:50%">
+            <input id="searchValue" v-model="searchValue" type="text" class="form-control" placeholder="搜索  (用户姓名)" style="width:50%">
         </div>
     </div>
 
@@ -70,35 +48,22 @@
             <thead class="thead-light">
             <tr>
                 <th scope="col" style="width: 5%">序号</th>
-                <th scope="col" style="width: 20%">设备名称</th>
-                <th scope="col" style="width: 10%">设备类型</th>
-                <th scope="col" style="width: 15%">序列号</th>
-                <th scope="col" style="width: 10%">拥有者</th>
-                <th scope="col" style="width: 10%">借用者</th>
-                <th scope="col" style="width: 10%">备注</th>
-                <th scope="col" style="width: 10%">修改时间</th>
-                <th scope="col" style="width: 15%" v-show="showUser">操作</th>
+                <th scope="col" style="width: 20%">姓名</th>
+                <th scope="col" style="width: 10%">密码</th>
+                <th scope="col" style="width: 15%">权限</th>
+                <th scope="col" style="width: 15%">操作</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(item, index) in deviceList">
+            <tr v-for="(item, index) in userList">
                 <th scope="row">{{ index + 1 }}</th>
-                <td>{{ item.deviceName }}</td>
-                <td>{{ item.deviceType }}</td>
-                <td>{{ item.serialNumber}}</td>
-                <td>{{ item.owner }}</td>
-                <td>{{ item.borrower }}</td>
-                <td>{{ item.remark }}</td>
-                <td>{{ item.updateTime }}</td>
-                <td v-show="showUser">
-                    <div v-if="item.back">
-                        <button type="button" class="btn btn-outline-success btn-sm" @click="borrowButton(item)">借出</button>
-                        <button type="button" class="btn btn-outline-dark btn-sm" @click="modifyButton(item)">修改</button>
-                        <button type="button" class="btn btn-outline-danger btn-sm" @click="deleteButton(item)">删除</button>
-                    </div>
-                    <div v-else>
-                        <button type="button" class="btn btn-warning btn-sm" @click="returnButton(item)">归还</button>
-                    </div>
+                <td>{{ item.username }}</td>
+                <td>{{ item.password }}</td>
+                <td>{{ item.roles}}</td>
+                <td>
+                    <button type="button" class="btn btn-outline-success btn-sm" @click="authorizeButton(item)">授权</button>
+                    <button type="button" class="btn btn-outline-dark btn-sm" @click="modifyButton(item)">修改</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" @click="deleteButton(item)">删除</button>
                 </td>
             </tr>
             </tbody>
@@ -294,15 +259,14 @@
 
 
 </div>
-<script src="lib/vue/axios.min.js" crossorigin="anonymous"></script>
-<script src="lib/vue/vue.js" crossorigin="anonymous"></script>
-
-<script src="lib/jquery/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-<script src="lib/popper/popper.min.js" crossorigin="anonymous"></script>
-<script src="lib/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
-<script src="lib/moment/moment.min.js"></script>
-<script src="js/const.js"></script>
-<script src="js/index.js"></script>
+<script src="../lib/vue/axios.min.js" crossorigin="anonymous"></script>
+<script src="../lib/vue/vue.js" crossorigin="anonymous"></script>
+<script src="../lib/jquery/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="../lib/popper/popper.min.js" crossorigin="anonymous"></script>
+<script src="../lib/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="../lib/moment/moment.min.js"></script>
+<script src="../js/const.js"></script>
+<script src="../js/index.js"></script>
 
 </body>
 </html>

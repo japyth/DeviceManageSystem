@@ -55,7 +55,6 @@ public class DeviceAction {
 
     @RequestMapping("/getAllDevice")
     public BaseResponse getAllDevice(@RequestBody DeviceDto deviceDto) {
-
         String deviceStatus = deviceDto.getDeviceStatus();
         String deviceType = deviceDto.getDeviceType();
         String searchValue = deviceDto.getSearchValue();

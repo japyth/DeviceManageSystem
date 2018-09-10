@@ -27,6 +27,9 @@ public class SysUser implements Serializable, UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "isHaveDevice")
+    private Boolean isHaveDevice;
+
     @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
     @JoinTable(
             joinColumns = {@JoinColumn(name = "user_id") },
@@ -96,5 +99,13 @@ public class SysUser implements Serializable, UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Boolean getHaveDevice() {
+        return isHaveDevice;
+    }
+
+    public void setHaveDevice(Boolean haveDevice) {
+        isHaveDevice = haveDevice;
     }
 }
