@@ -5,7 +5,7 @@ var vm = new Vue({
         showAdmin:false,
         showUser:false,
         userList: [],         //table列表
-        sysUser: {},             //新增的人员
+        user: {},             //新增的人员
         searchValue: "",
         fDisabled: false,
         lDisabled: false,
@@ -136,7 +136,7 @@ var vm = new Vue({
         },
 
         openAddDialog: function () {
-            $('#addDeviceModal').modal('show')
+            $('#addUserModal').modal('show')
         },
 
         addDevice: function () {
