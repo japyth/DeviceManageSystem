@@ -1,4 +1,4 @@
-package com.ray.resourcemanage.springSecurity.entity;
+package com.ray.resourcemanage.userManage.bean;
 
 import javax.persistence.*;
 import java.io.Serializable;

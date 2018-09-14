@@ -1,6 +1,6 @@
-package com.ray.resourcemanage.springSecurity.dao;
+package com.ray.resourcemanage.userManage.dao;
 
-import com.ray.resourcemanage.springSecurity.entity.SysUser;
+import com.ray.resourcemanage.userManage.bean.SysUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

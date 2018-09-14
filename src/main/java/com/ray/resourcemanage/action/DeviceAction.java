@@ -9,7 +9,9 @@ import com.ray.resourcemanage.entity.SearchResult;
 import com.ray.resourcemanage.service.DeviceService;
 import com.ray.resourcemanage.service.LogService;
 import com.ray.resourcemanage.util.BaseResponse;
+import com.ray.resourcemanage.util.ConstParam;
 import com.ray.resourcemanage.util.RequestUtil;
+import com.ray.resourcemanage.util.ResultUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +41,7 @@ import java.util.function.Function;
 @RequestMapping("api/device")
 @CrossOrigin
 public class DeviceAction {
-    private static final String ROLE_VISITOR = "ROLE_ANONYMOUS";
+
     @Autowired
     private DeviceService deviceService;
 
@@ -80,18 +82,7 @@ public class DeviceAction {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<GrantedAuthority> authorities = (List<GrantedAuthority>)authentication.getAuthorities();
-        if(authorities.size() == 1 && authorities.get(0).getAuthority().equals(ROLE_VISITOR)){
-            String username = "游客";
-            return new BaseResponse(searchResult,username,null);
-        } else {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-            List<String> roles = new ArrayList<>();
-            for (GrantedAuthority authority : authorities) {
-                roles.add(authority.getAuthority());
-            }
-            return new BaseResponse(searchResult,username,roles);
-        }
+        return ResultUtil.authResult(authorities, searchResult, authentication);
     }
 
     //添加设备（默认已归还）

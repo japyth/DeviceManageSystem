@@ -1,7 +1,7 @@
 package com.ray.resourcemanage.springSecurity.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ray.resourcemanage.springSecurity.entity.SysUser;
+import com.ray.resourcemanage.userManage.bean.SysUser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationManager;

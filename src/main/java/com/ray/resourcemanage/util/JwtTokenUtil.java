@@ -1,10 +1,9 @@
 package com.ray.resourcemanage.util;
 
-import com.ray.resourcemanage.springSecurity.entity.SysUser;
+import com.ray.resourcemanage.userManage.bean.SysUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 

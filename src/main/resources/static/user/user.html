@@ -2,7 +2,7 @@
 <html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>设备管理平台</title>
+    <title>人员管理平台</title>
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../lib/datetimepicker/css/font-awesome.css" crossorigin="anonymous">
@@ -10,11 +10,11 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(69,161,168,1);">
-    <a href="#" class="navbar-brand mb-0 h1"><img src="lib/image/seal.png" style="width:45px;margin-right:15px"/>综合安防海豹设备管理平台</a>
+    <a href="#" class="navbar-brand mb-0 h1"><img src="lib/image/seal.png" style="width:45px;margin-right:15px"/>综合安防海豹人员管理平台</a>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="../index.html">主页</a>
             </li>
             <li class="nav-item">
@@ -49,7 +49,6 @@
             <tr>
                 <th scope="col" style="width: 5%">序号</th>
                 <th scope="col" style="width: 20%">姓名</th>
-                <th scope="col" style="width: 10%">密码</th>
                 <th scope="col" style="width: 15%">权限</th>
                 <th scope="col" style="width: 15%">操作</th>
             </tr>
@@ -58,8 +57,7 @@
             <tr v-for="(item, index) in userList">
                 <th scope="row">{{ index + 1 }}</th>
                 <td>{{ item.username }}</td>
-                <td>{{ item.password }}</td>
-                <td>{{ item.roles}}</td>
+                <td>{{ item.roles }}</td>
                 <td>
                     <button type="button" class="btn btn-outline-success btn-sm" @click="authorizeButton(item)">授权</button>
                     <button type="button" class="btn btn-outline-dark btn-sm" @click="modifyButton(item)">修改</button>
@@ -92,170 +90,6 @@
         </span>
         <span class="btn btn-outline-dark btn-sm disabled">{{pageCurrent}}/{{pageCount}}</span>
     </div>
-    <!--添加设备模态框-->
-    <div class="modal fade" id="addDeviceModal" tabindex="-1" role="dialog" aria-labelledby="addDeviceModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addDeviceModalLabel">添加设备</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <div class="form-group">
-                            <label class="col-form-label">设备名称</label>
-                            <input type="text" class="form-control" v-model="device.deviceName">
-                        </div>
-                        <div class="form-group">
-                            <label class="col-form-label">设备类型</label>
-                            <select class="form-control" v-model="device.deviceType">
-                                <option>门禁</option>
-                                <option>访客</option>
-                                <option>可视对讲</option>
-                                <option>动环</option>
-                                <option>梯控</option>
-                                <option>消费</option>
-                                <option>视频</option>
-                                <option>停车场</option>
-                                <option>书籍</option>
-                                <option>其他</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-form-label">设备序列号</label>
-                            <input type="text" class="form-control" v-model="device.serialNumber">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-form-label">拥有者</label>
-                            <input type="text" class="form-control" v-model="device.owner">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-form-label">备注</label>
-                            <textarea class="form-control" v-model="device.remark"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-outline-dark" @click="addDevice">添加</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--借出设备模态框-->
-    <div class="modal fade" id="borrowDeviceModal" tabindex="-1" role="dialog" aria-labelledby="addDeviceModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">借出设备</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <div class="form-group">
-                            <label class="col-form-label">借用人</label>
-                            <input type="text" class="form-control" v-model="borrowDevice.borrower">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-outline-dark" @click="borrowDialogButton()">借出</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--修改设备模态框-->
-    <div class="modal fade" id="modifyDeviceModal" tabindex="-1" role="dialog" aria-labelledby="modifyDeviceModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modifyDeviceModalLabel">修改设备</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <div class="form-group">
-                            <label class="col-form-label">设备名称</label>
-                            <input type="text" class="form-control" v-model="modifyDevice.deviceName">
-                        </div>
-                        <div class="form-group">
-                            <label class="col-form-label">设备类型</label>
-                            <select class="form-control" v-model="modifyDevice.deviceType">
-                                <option>门禁</option>
-                                <option>访客</option>
-                                <option>可视对讲</option>
-                                <option>动环</option>
-                                <option>梯控</option>
-                                <option>消费</option>
-                                <option>视频</option>
-                                <option>停车场</option>
-                                <option>书籍</option>
-                                <option>其他</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-form-label">设备序列号</label>
-                            <input type="text" class="form-control" v-model="modifyDevice.serialNumber">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-form-label">拥有者</label>
-                            <input type="text" class="form-control" v-model="modifyDevice.owner">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-form-label">备注</label>
-                            <textarea class="form-control" v-model="modifyDevice.remark"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-outline-dark" @click="modifyDeviceButton()">修改</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--删除设备模态框-->
-    <div class="modal fade" id="deleteDeviceModal" tabindex="-1" role="dialog" aria-labelledby="deleteDeviceModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">删除设备</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <div class="form-group">
-                            <label class="col-form-label">是否删除设备{{deleteDevice.deviceName}}</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-danger" @click="deleteDialogButton()">删除</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
 </div>
@@ -266,7 +100,7 @@
 <script src="../lib/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
 <script src="../lib/moment/moment.min.js"></script>
 <script src="../js/const.js"></script>
-<script src="../js/index.js"></script>
+<script src="user.js"></script>
 
 </body>
 </html>

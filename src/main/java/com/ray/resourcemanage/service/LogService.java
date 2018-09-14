@@ -61,18 +61,18 @@ public class LogService {
 
     private Specification<LogEntity> getWhereClause(final SearchEntity searchEntity){
         return (Specification<LogEntity>) (root, query, cb) -> {
-            List<Predicate> predicate = new ArrayList<>();
+            List<Predicate> restrictionList = new ArrayList<>();
             if(searchEntity.getStartTime()!=null){
-                predicate.add(cb.greaterThanOrEqualTo(root.get("updateTime").as(Date.class), searchEntity.getStartTime()));
+                restrictionList.add(cb.greaterThanOrEqualTo(root.get("updateTime").as(Date.class), searchEntity.getStartTime()));
             }
             if(searchEntity.getEndTime()!=null){
-                predicate.add(cb.lessThanOrEqualTo(root.get("updateTime").as(Date.class), searchEntity.getEndTime()));
+                restrictionList.add(cb.lessThanOrEqualTo(root.get("updateTime").as(Date.class), searchEntity.getEndTime()));
             }
             if (!StringUtils.isEmpty(searchEntity.getSearchValue())){
-                predicate.add(cb.like(root.get("remark").as(String.class), "%" + searchEntity.getSearchValue() + "%"));
+                restrictionList.add(cb.like(root.get("remark").as(String.class), "%" + searchEntity.getSearchValue() + "%"));
             }
-            Predicate[] pre = new Predicate[predicate.size()];
-            return query.where(predicate.toArray(pre)).getRestriction();
+            Predicate[] pre = new Predicate[restrictionList.size()];
+            return query.where(restrictionList.toArray(pre)).getRestriction();
         };
     }
 

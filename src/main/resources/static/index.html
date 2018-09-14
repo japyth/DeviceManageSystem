@@ -33,7 +33,7 @@
     <!--查询-->
     <div class="form-inline" style="margin-top: 20px;margin-bottom: 20px">
         <div class="form-group mb-2">
-            <button v-show="showUser" type="button" class="btn btn-outline-primary" @click="openAddDialog" style="margin-left: 20px">添加设备
+            <button v-if="showUser" type="button" class="btn btn-outline-primary" @click="openAddDialog" style="margin-left: 20px">添加设备
             </button>
         </div>
 
@@ -77,7 +77,7 @@
                 <th scope="col" style="width: 10%">借用者</th>
                 <th scope="col" style="width: 10%">备注</th>
                 <th scope="col" style="width: 10%">修改时间</th>
-                <th scope="col" style="width: 15%" v-show="showUser">操作</th>
+                <th scope="col" style="width: 15%" v-if="showUser">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -90,7 +90,7 @@
                 <td>{{ item.borrower }}</td>
                 <td>{{ item.remark }}</td>
                 <td>{{ item.updateTime }}</td>
-                <td v-show="showUser">
+                <td v-if="showUser">
                     <div v-if="item.back">
                         <button type="button" class="btn btn-outline-success btn-sm" @click="borrowButton(item)">借出</button>
                         <button type="button" class="btn btn-outline-dark btn-sm" @click="modifyButton(item)">修改</button>

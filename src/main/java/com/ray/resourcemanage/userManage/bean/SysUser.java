@@ -1,4 +1,4 @@
-package com.ray.resourcemanage.springSecurity.entity;
+package com.ray.resourcemanage.userManage.bean;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
