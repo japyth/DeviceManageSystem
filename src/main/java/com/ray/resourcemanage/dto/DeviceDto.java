@@ -1,12 +1,5 @@
 package com.ray.resourcemanage.dto;
 
-/**
- * @ProjectName: resourcemanage
- * @address: http://www.hikvision.com
- * @Auther: jiangsong7
- * @Date: 2018/9/7 17:14
- * @Description:
- */
 public class DeviceDto {
     private String deviceStatus;
     private String deviceType;

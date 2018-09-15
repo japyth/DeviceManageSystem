@@ -60,4 +60,8 @@ public class UserService implements UserDetailsService {
             return query.where(restrictionList.toArray(pre)).getRestriction();
         };
     }
+
+    public void addUser(SysUser sysUser) {
+        userDao.save(sysUser);
+    }
 }

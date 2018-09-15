@@ -31,8 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                // 测试用资源，需要验证了的用户才能访问
-                .antMatchers("/api/admin/**").authenticated()
+                // 用户管理页面，需要是具备超级管理员权限的用户才能通过验证
+                .antMatchers("/api/admin/**").hasAuthority("admin")
                 // 其他都放行了
                 .anyRequest().permitAll()
                 .and()

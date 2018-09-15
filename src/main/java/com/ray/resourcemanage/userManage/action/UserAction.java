@@ -4,10 +4,15 @@ import com.ray.resourcemanage.entity.SearchEntity;
 import com.ray.resourcemanage.entity.SearchResult;
 import com.ray.resourcemanage.userManage.bean.SysRole;
 import com.ray.resourcemanage.userManage.bean.SysUser;
+import com.ray.resourcemanage.userManage.dao.IRoleDao;
+import com.ray.resourcemanage.userManage.dao.IUserDao;
+import com.ray.resourcemanage.userManage.dto.AddUserDto;
 import com.ray.resourcemanage.userManage.dto.UserReqDto;
 import com.ray.resourcemanage.userManage.dto.UserResDto;
 import com.ray.resourcemanage.userManage.service.UserService;
 import com.ray.resourcemanage.util.BaseResponse;
+import com.ray.resourcemanage.util.BcryptUtil;
+import com.ray.resourcemanage.util.ConstParam;
 import com.ray.resourcemanage.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,23 +25,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @ProjectName: resourcemanage
- * @address: http://www.hikvision.com
- * @Auther: jiangsong7
- * @Date: 2018/9/13 16:47
- * @Description:
- */
 @RestController
 @RequestMapping("api/admin")
 @CrossOrigin
 public class UserAction {
     @Autowired
     UserService userService;
-    @RequestMapping("/getAllDevice")
+    @Autowired
+    IRoleDao roleDao;
+    @RequestMapping("/getAllUser")
     public BaseResponse getAllUser(@RequestBody UserReqDto userReqDto) {
         String searchValue = userReqDto.getSearchValue();
         Integer pagesize = userReqDto.getPagesize();
@@ -76,6 +77,28 @@ public class UserAction {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<GrantedAuthority> authorities = (List<GrantedAuthority>)authentication.getAuthorities();
         return ResultUtil.authResult(authorities, searchResultRes, authentication);
+    }
+
+    @RequestMapping("/addUser")
+    public BaseResponse getAllUser(@RequestBody AddUserDto addUserDto) {
+        if(addUserDto!=null) {
+            SysUser user = new SysUser();
+            user.setUsername(addUserDto.getUsername());
+            user.setHaveDevice(false);
+            user.setPassword(BcryptUtil.bcryptEncode(ConstParam.INIT_PASSWORD));
+            Set<SysRole> roles = new HashSet<>();
+            if(addUserDto.getAdminAuth()){
+                roles.add(roleDao.findByRoleName("admin"));
+            }
+            if(addUserDto.getUserAuth()){
+                roles.add(roleDao.findByRoleName("user"));
+            }
+            user.setSysRoleSet(roles);
+            userService.addUser(user);
+            return new BaseResponse("success");
+        } else {
+            return new BaseResponse(false);
+        }
     }
 
 }

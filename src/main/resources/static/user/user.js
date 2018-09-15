@@ -51,7 +51,7 @@ var vm = new Vue({
                 //查询和分页参数
                 var searchValue = $('#searchValue').val();
                 //分页数据
-                axios.post("/api/admin/getAllDevice", {
+                axios.post("/api/admin/getAllUser", {
                     searchValue: searchValue,
                     pageIndex: pageIndex,
                     pagesize: vm.pagesize
@@ -139,21 +139,25 @@ var vm = new Vue({
             $('#addUserModal').modal('show')
         },
 
-        addDevice: function () {
-            if(vm.device.deviceName&&vm.device.deviceType&&vm.device.deviceType&&vm.device.serialNumber&&vm.device.owner){
-                $.post(getHost() + "api/device/addDevice", vm.device)
-                    .done(function (data) {
-                        if (data.result === true) {
+        addUser: function () {
+            if(vm.user.username){
+                axios.post("/api/admin/addUser", vm.user,{
+                    headers: {
+                        "Authorization" : localStorage.getItem("token")
+                    }
+                })
+                    .then(function(response){
+                        if (response.data.result === true) {
                             vm.showPage(1, null, true);
-                            $('#addDeviceModal').modal('hide');
-                            vm.device = {};     //清空内容
+                            $('#addUserModal').modal('hide');
+                            vm.user = {};     //清空内容
                         }
                         else {
                             alert(data.errorMessage ? data.errorMessage : "请求异常");
                         }
                     })
             } else {
-                alert("表单内容（除备注外）不能为空！")
+                alert("用户姓名不能为空！")
             }
 
         },

@@ -11,13 +11,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @ProjectName: resourcemanage
- * @address: http://www.hikvision.com
- * @Auther: jiangsong7
- * @Date: 2018/9/7 12:09
- * @Description:
- */
 @Component
 public class JwtTokenUtil {
     private final String secret = "MyJwtSecret";

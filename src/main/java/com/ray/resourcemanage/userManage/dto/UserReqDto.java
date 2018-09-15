@@ -1,13 +1,5 @@
 package com.ray.resourcemanage.userManage.dto;
 
-
-/**
- * @ProjectName: resourcemanage
- * @address: http://www.hikvision.com
- * @Auther: jiangsong7
- * @Date: 2018/9/13 16:50
- * @Description:
- */
 public class UserReqDto {
     private String searchValue;
     private Integer pagesize;

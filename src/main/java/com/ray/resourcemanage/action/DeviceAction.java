@@ -9,20 +9,15 @@ import com.ray.resourcemanage.entity.SearchResult;
 import com.ray.resourcemanage.service.DeviceService;
 import com.ray.resourcemanage.service.LogService;
 import com.ray.resourcemanage.util.BaseResponse;
-import com.ray.resourcemanage.util.ConstParam;
 import com.ray.resourcemanage.util.RequestUtil;
 import com.ray.resourcemanage.util.ResultUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Function;
 
 /**
  * @Description:

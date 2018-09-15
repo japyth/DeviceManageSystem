@@ -1,12 +1,5 @@
 package com.ray.resourcemanage.userManage.dto;
 
-/**
- * @ProjectName: resourcemanage
- * @address: http://www.hikvision.com
- * @Auther: jiangsong7
- * @Date: 2018/9/14 10:00
- * @Description:
- */
 public class UserResDto {
     private String username;
     private String roles;
