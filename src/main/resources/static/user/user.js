@@ -6,6 +6,7 @@ var vm = new Vue({
         showUser:false,
         userList: [],         //table列表
         user: {},             //新增的人员
+        modifyUser: {},
         searchValue: "",
         fDisabled: false,
         lDisabled: false,
@@ -162,35 +163,13 @@ var vm = new Vue({
 
         },
 
-        borrowButton: function (theDevice) {
-            vm.borrowDevice = JSON.parse(JSON.stringify(theDevice));
-            $('#borrowDeviceModal').modal('show')
+        modifyButton: function (theUser) {
+            vm.modifyUser = JSON.parse(JSON.stringify(theUser));
+
+            $('#modifyUserModal').modal('show');
         },
 
-        borrowDialogButton: function () {
-            if (vm.borrowDevice.borrower) {
-                $.post(getHost() + "api/device/borrowDevice", vm.borrowDevice)
-                    .done(function (data) {
-                        if (data.result === true) {
-                            vm.showPage(1, null, true);
-                            $('#borrowDeviceModal').modal('hide');
-                            vm.borrowDevice = {};     //清空内容
-                        }
-                        else {
-                            alert(data.errorMessage ? data.errorMessage : "请求异常");
-                        }
-                    })
-            } else {
-                alert("借出人员为空");
-            }
-        },
-
-        modifyButton: function (theDevice) {
-            vm.modifyDevice = JSON.parse(JSON.stringify(theDevice));
-            $('#modifyDeviceModal').modal('show');
-        },
-
-        modifyDeviceButton: function () {
+        modifyUserButton: function () {
             if (vm.modifyDevice.owner) {
                 $.post(getHost() + "api/device/modifyDevice", vm.modifyDevice)
                     .done(function (data) {
