@@ -165,39 +165,54 @@ var vm = new Vue({
 
         modifyButton: function (theUser) {
             vm.modifyUser = JSON.parse(JSON.stringify(theUser));
-
+            //页面上显示的是拼接之后的权限
+            var roles = vm.modifyUser.roles;
+            if(roles == null){
+                vm.modifyUser.adminAuth = false;
+                vm.modifyUser.userAuth = false;
+            }
+            if(roles.indexOf("超级管理员")>=0) {
+                vm.modifyUser.adminAuth = true;
+            }
+            if(roles.indexOf("设备管理员")>=0) {
+                vm.modifyUser.userAuth = true;
+            }
             $('#modifyUserModal').modal('show');
         },
 
         modifyUserButton: function () {
-            if (vm.modifyDevice.owner) {
-                $.post(getHost() + "api/device/modifyDevice", vm.modifyDevice)
-                    .done(function (data) {
-                        if (data.result === true) {
+            if (vm.modifyUser.username) {
+                axios.post(getHost() + "api/admin/modifyUser", vm.modifyUser, {
+                    headers: {
+                        "Authorization": localStorage.getItem("token")
+                    }
+                })
+                    .then(function (response) {
+                        if (response.data.result === true) {
                             vm.showPage(1, null, true);
-                            $('#modifyDeviceModal').modal('hide');
-                            vm.modifyDevice = {};     //清空内容
+                            $('#modifyUserModal').modal('hide');
+                            vm.modifyUser = {};     //清空内容
                         }
                         else {
-                            alert(data.errorMessage ? data.errorMessage : "请求异常");
+                           // alert(data.errorMessage ? data.errorMessage : "请求异常");
                         }
                     })
             } else {
-                alert("拥有者为空");
+                alert("用户姓名为空");
             }
         },
-        deleteButton: function (theDevice) {
-            vm.deleteDevice = JSON.parse(JSON.stringify(theDevice));
-            $('#deleteDeviceModal').modal('show');
+        deleteButton: function (theUser) {
+            vm.deleteUser = JSON.parse(JSON.stringify(theUser));
+            $('#deleteUserModal').modal('show');
         },
 
         deleteDialogButton: function () {
-            $.post(getHost() + "api/device/deleteDevice", vm.deleteDevice)
+            $.post(getHost() + "api/admin/deleteUser", vm.deleteUser)
                 .done(function (data) {
                     if (data.result === true) {
                         vm.showPage(1, null, true);
-                        $('#deleteDeviceModal').modal('hide');
-                        vm.deleteDevice = {};     //清空内容
+                        $('#deleteUserModal').modal('hide');
+                        vm.deleteUser = {};     //清空内容
                     }
                     else {
                         alert(data.errorMessage ? data.errorMessage : "请求异常");
@@ -205,8 +220,8 @@ var vm = new Vue({
                 })
         },
 
-        returnButton: function (theDevice) {
-            $.post(getHost() + "api/device/returnDevice", theDevice)
+        returnButton: function (theUser) {
+            $.post(getHost() + "api/admin/returnUser", theUser)
                 .done(function (data) {
                     if (data.result === true) {
                         vm.showPage(1, null, true);

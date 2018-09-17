@@ -1,9 +1,18 @@
 package com.ray.resourcemanage.userManage.dto;
 
-public class UserResDto {
+public class ModifyUserDto {
     private Integer userId;
     private String username;
-    private String roles;
+    private boolean adminAuth;
+    private boolean userAuth;
+
+    public boolean isAdminAuth() {
+        return adminAuth;
+    }
+
+    public boolean isUserAuth() {
+        return userAuth;
+    }
 
     public Integer getUserId() {
         return userId;
@@ -21,11 +30,4 @@ public class UserResDto {
         this.username = username;
     }
 
-    public String getRoles() {
-        return roles;
-    }
-
-    public void setRoles(String roles) {
-        this.roles = roles;
-    }
 }

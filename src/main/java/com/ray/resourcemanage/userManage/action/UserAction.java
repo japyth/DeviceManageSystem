@@ -7,6 +7,7 @@ import com.ray.resourcemanage.userManage.bean.SysUser;
 import com.ray.resourcemanage.userManage.dao.IRoleDao;
 import com.ray.resourcemanage.userManage.dao.IUserDao;
 import com.ray.resourcemanage.userManage.dto.AddUserDto;
+import com.ray.resourcemanage.userManage.dto.ModifyUserDto;
 import com.ray.resourcemanage.userManage.dto.UserReqDto;
 import com.ray.resourcemanage.userManage.dto.UserResDto;
 import com.ray.resourcemanage.userManage.service.UserService;
@@ -36,6 +37,8 @@ public class UserAction {
     @Autowired
     UserService userService;
     @Autowired
+    IUserDao userDao;
+    @Autowired
     IRoleDao roleDao;
     @RequestMapping("/getAllUser")
     public BaseResponse getAllUser(@RequestBody UserReqDto userReqDto) {
@@ -56,16 +59,18 @@ public class UserAction {
         if(sysUsers!=null && sysUsers.size()>0){
             for (SysUser sysUser : sysUsers) {
                 UserResDto userResDto = new UserResDto();
+                userResDto.setUserId(sysUser.getUserId());
                 userResDto.setUsername(sysUser.getUsername());
                 Set<SysRole> sysRoleSet = sysUser.getSysRoleSet();
                 StringBuilder roleBuilder = new StringBuilder();
+                String roles = "";
                 if(sysRoleSet!=null && sysRoleSet.size()>0) {
                     for (SysRole sysRole : sysRoleSet) {
-                        roleBuilder.append(sysRole.getRoleName()).append(",");
+                        roleBuilder.append(sysRole.getRemark()).append(",");
                     }
+                    roles = roleBuilder.toString();
+                    roles = roles.substring(0,roles.length()-1);
                 }
-                String roles = roleBuilder.toString();
-                roles = roles.substring(0,roles.length()-1);
                 userResDto.setRoles(roles);
                 userResDtos.add(userResDto);
             }
@@ -100,5 +105,28 @@ public class UserAction {
             return new BaseResponse(false);
         }
     }
+
+    @RequestMapping("/modifyUser")
+    public BaseResponse getAllUser(@RequestBody ModifyUserDto modifyUserDto) {
+        if(modifyUserDto!=null) {
+            SysUser userFromDb = userDao.findByUserId(modifyUserDto.getUserId());
+            userFromDb.setUsername(modifyUserDto.getUsername());
+            userFromDb.setHaveDevice(false);
+            Set<SysRole> roles = new HashSet<>();
+            if(modifyUserDto.isAdminAuth()){
+                roles.add(roleDao.findByRoleName("admin"));
+            }
+            if(modifyUserDto.isUserAuth()){
+                roles.add(roleDao.findByRoleName("user"));
+            }
+            userFromDb.setSysRoleSet(roles);
+            userService.addUser(userFromDb);
+            return new BaseResponse("success");
+        } else {
+            return new BaseResponse(false);
+        }
+    }
+
+
 
 }

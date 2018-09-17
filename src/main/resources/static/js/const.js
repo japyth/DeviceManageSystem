@@ -1,3 +1,3 @@
 function getHost() {
-    return "http://127.0.0.1:8080/"
+    return "http://10.12.65.14:8080/"
 }

@@ -15,6 +15,8 @@ public class SysRole implements Serializable {
     private Integer roleId;
     @Column(name = "role_name")
     private String roleName;
+    @Column(name = "remark")
+    private String remark;
 
     public Integer getRoleId() {
         return roleId;
@@ -32,4 +34,11 @@ public class SysRole implements Serializable {
         this.roleName = roleName;
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 }
