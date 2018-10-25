@@ -1,9 +1,9 @@
-package com.ray.resourcemanage.action;
+package com.ray.resourcemanage.logManage.action;
 
-import com.ray.resourcemanage.entity.LogEntity;
+import com.ray.resourcemanage.logManage.entity.LogEntity;
 import com.ray.resourcemanage.entity.SearchEntity;
 import com.ray.resourcemanage.entity.SearchResult;
-import com.ray.resourcemanage.service.LogService;
+import com.ray.resourcemanage.logManage.service.LogService;
 import com.ray.resourcemanage.util.BaseResponse;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;

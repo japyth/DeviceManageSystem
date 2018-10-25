@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="lib/datetimepicker/css/font-awesome.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="user/user.css" crossorigin="anonymous">
 </head>
 <body>
 
@@ -37,7 +38,7 @@
             </button>
         </div>
 
-        <div class="form-group mb-2" style="width: 50%;margin-left: 25%" >
+        <div class="form-group mb-2" style="width: 50%;margin-left: 25%;margin-right: 10%" >
             <div class="form-group">
                 <select class="form-control" v-model="deviceStatus" v-on:change="showPage(1,$event,true)">
                     <option value="0">所有设备</option>
@@ -62,6 +63,11 @@
             </div>
             <input id="searchValue" v-model="searchValue" type="text" class="form-control" placeholder="搜索  (设备名称/设备类型/序列号/拥有者/借用者/备注)" style="width:50%">
         </div>
+
+        <div class="tg-list-item">
+                <input class="tgl tgl-skewed" id="cb3" type="checkbox" v-model="isPrivate"/>
+                <label class="tgl-btn" data-tg-off="所有" data-tg-on="个人" for="cb3"></label>
+        </div>
     </div>
 
     <!--表格-->
@@ -69,28 +75,32 @@
         <table class="table table-hover" style="word-break:break-all;">
             <thead class="thead-light">
             <tr>
-                <th scope="col" style="width: 5%">序号</th>
-                <th scope="col" style="width: 20%">设备名称</th>
-                <th scope="col" style="width: 10%">设备类型</th>
-                <th scope="col" style="width: 15%">序列号</th>
-                <th scope="col" style="width: 10%">拥有者</th>
-                <th scope="col" style="width: 10%">借用者</th>
-                <th scope="col" style="width: 10%">备注</th>
-                <th scope="col" style="width: 10%">修改时间</th>
-                <th scope="col" style="width: 15%" v-if="showUser">操作</th>
+                <th scope="col" style="width: 5%; text-align:center">序号</th>
+                <th scope="col" style="width: 12%; text-align:center">设备名称</th>
+                <th scope="col" style="width: 6%; text-align:center">设备类型</th>
+                <th scope="col" style="width: 10%; text-align:center">序列号</th>
+                <th scope="col" style="width: 6%; text-align:center">拥有者</th>
+                <th scope="col" style="width: 6%; text-align:center">借用者</th>
+                <th scope="col" style="width: 10%; text-align:center">备注</th>
+                <th scope="col" style="width: 5%; text-align:center" v-if="isPrivate">用户名</th>
+                <th scope="col" style="width: 5%; text-align:center" v-if="isPrivate">密码</th>
+                <th scope="col" style="width: 10%; text-align:center">修改时间</th>
+                <th scope="col" style="width: 15%; text-align:center" v-if="showUser">操作</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="(item, index) in deviceList">
                 <th scope="row">{{ index + 1 }}</th>
-                <td>{{ item.deviceName }}</td>
-                <td>{{ item.deviceType }}</td>
-                <td>{{ item.serialNumber}}</td>
-                <td>{{ item.owner }}</td>
-                <td>{{ item.borrower }}</td>
-                <td>{{ item.remark }}</td>
-                <td>{{ item.updateTime }}</td>
-                <td v-if="showUser">
+                <td style="text-align:center">{{ item.deviceName }}</td>
+                <td style="text-align:center">{{ item.deviceType }}</td>
+                <td style="text-align:center">{{ item.serialNumber}}</td>
+                <td style="text-align:center">{{ item.owner }}</td>
+                <td style="text-align:center">{{ item.borrower }}</td>
+                <td style="text-align:center">{{ item.remark }}</td>
+                <td style="text-align:center" v-if="isPrivate">{{ item.deviceUsername }}</td>
+                <td style="text-align:center" v-if="isPrivate">{{ item.devicePwd }}</td>
+                <td style="text-align:center">{{ item.updateTime }}</td>
+                <td style="text-align:center" v-if="showUser">
                     <div v-if="item.back">
                         <button type="button" class="btn btn-outline-success btn-sm" @click="borrowButton(item)">借出</button>
                         <button type="button" class="btn btn-outline-dark btn-sm" @click="modifyButton(item)">修改</button>
@@ -166,7 +176,17 @@
 
                         <div class="form-group">
                             <label class="col-form-label">拥有者</label>
-                            <input type="text" class="form-control" v-model="device.owner">
+                            <input type="text" class="form-control" v-model="device.owner" id="deviceOwner">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-form-label">用户名</label>
+                            <input type="text" class="form-control" v-model="device.deviceUsername">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-form-label">密码</label>
+                            <input type="text" class="form-control" v-model="device.devicePwd">
                         </div>
 
                         <div class="form-group">
@@ -250,6 +270,16 @@
                         <div class="form-group">
                             <label class="col-form-label">拥有者</label>
                             <input type="text" class="form-control" v-model="modifyDevice.owner">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-form-label">用户名</label>
+                            <input type="text" class="form-control" v-model="modifyDevice.deviceUsername">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-form-label">密码</label>
+                            <input type="text" class="form-control" v-model="modifyDevice.devicePwd">
                         </div>
 
                         <div class="form-group">

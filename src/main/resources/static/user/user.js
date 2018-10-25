@@ -7,6 +7,7 @@ var vm = new Vue({
         userList: [],         //table列表
         user: {},             //新增的人员
         modifyUser: {},
+        authorizeUser: {},
         searchValue: "",
         fDisabled: false,
         lDisabled: false,

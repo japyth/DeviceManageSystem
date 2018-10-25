@@ -12,6 +12,7 @@ var vm = new Vue({
         modifyDevice: {},          //修改的设备
         deleteDevice: {},      //删除的设备
         searchValue: "",
+        isPrivate:false,
         fDisabled: false,
         lDisabled: false,
         totalCount: 200,
@@ -35,6 +36,9 @@ var vm = new Vue({
         // 如果 `question` 发生改变，这个函数就会运行
         searchValue: function (newValue, oldValue) {
             this.init();
+        },
+        isPrivate: function (newValue, oldValue) {
+            vm.showPage(1, null, true);
         }
     },
     methods: {
@@ -60,6 +64,7 @@ var vm = new Vue({
                     deviceStatus: vm.deviceStatus,
                     searchValue: searchValue,
                     deviceType: vm.deviceType,
+                    isPrivate: vm.isPrivate,
                     pageIndex: pageIndex,
                     pagesize: vm.pagesize
                 },{
@@ -148,6 +153,21 @@ var vm = new Vue({
         },
 
         openAddDialog: function () {
+            axios.get("api/device/showOwner",{
+                headers: {
+                    "Authorization" : localStorage.getItem("token")
+                }
+            })
+                .then(function (response) {
+                    if (response.data.result === true) {
+                        var data = response.data;
+                        var owner = data.data;
+                        $('#deviceOwner').val(owner);
+                    }
+                    else {
+                        alert(data.errorMessage ? data.errorMessage : "请求异常");
+                    }
+                });
             $('#addDeviceModal').modal('show')
         },
 
@@ -253,4 +273,4 @@ var vm = new Vue({
             });
         }
     }
-})
+});

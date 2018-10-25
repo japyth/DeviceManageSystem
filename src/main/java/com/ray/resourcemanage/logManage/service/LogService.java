@@ -1,7 +1,7 @@
-package com.ray.resourcemanage.service;
+package com.ray.resourcemanage.logManage.service;
 
-import com.ray.resourcemanage.dao.ILogDao;
-import com.ray.resourcemanage.entity.LogEntity;
+import com.ray.resourcemanage.logManage.dao.ILogDao;
+import com.ray.resourcemanage.logManage.entity.LogEntity;
 import com.ray.resourcemanage.entity.SearchEntity;
 import com.ray.resourcemanage.entity.SearchResult;
 import org.springframework.beans.factory.annotation.Autowired;

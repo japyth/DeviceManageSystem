@@ -1,12 +1,11 @@
-package com.ray.resourcemanage.dao;
+package com.ray.resourcemanage.deviceManage.dao;
 
-import com.ray.resourcemanage.entity.Device;
-import org.springframework.data.domain.Page;
+import com.ray.resourcemanage.deviceManage.entity.Device;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.io.Serializable;
-import java.util.List;
+
 
 /**
  * @Description: 记录增删改查

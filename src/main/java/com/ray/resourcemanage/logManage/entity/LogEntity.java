@@ -1,4 +1,4 @@
-package com.ray.resourcemanage.entity;
+package com.ray.resourcemanage.logManage.entity;
 
 import javax.persistence.*;
 import java.util.Date;

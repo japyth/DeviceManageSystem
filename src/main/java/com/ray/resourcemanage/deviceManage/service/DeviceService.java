@@ -1,8 +1,7 @@
-package com.ray.resourcemanage.service;
+package com.ray.resourcemanage.deviceManage.service;
 
-import com.ray.resourcemanage.dao.IDeviceDao;
-import com.ray.resourcemanage.entity.Device;
-import com.ray.resourcemanage.entity.LogEntity;
+import com.ray.resourcemanage.deviceManage.dao.IDeviceDao;
+import com.ray.resourcemanage.deviceManage.entity.Device;
 import com.ray.resourcemanage.entity.SearchEntity;
 import com.ray.resourcemanage.entity.SearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,17 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +57,10 @@ public class DeviceService {
             String deviceType = (String) map.get("deviceType");
             if(!deviceType.equals("设备类型")){
                 restrictionList.add(cb.equal(root.get("deviceType").as(String.class),deviceType));
+            }
+            String owner = (String) map.get("owner");
+            if(!StringUtils.isEmpty(owner)){
+                restrictionList.add(cb.equal(root.get("owner").as(String.class),owner));
             }
             if (!StringUtils.isEmpty(searchEntity.getSearchValue())){
                 restrictionList.add(cb.or(cb.like(root.get("deviceName").as(String.class), "%" + searchEntity.getSearchValue() + "%"),

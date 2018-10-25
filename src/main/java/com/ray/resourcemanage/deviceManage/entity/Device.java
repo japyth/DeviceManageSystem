@@ -1,4 +1,4 @@
-package com.ray.resourcemanage.entity;
+package com.ray.resourcemanage.deviceManage.entity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -36,6 +36,12 @@ public class Device {
 
     @Column(name = "remark", columnDefinition = "TEXT")
     private String remark;                                                                  //备注
+
+    @Column(name = "device_username", columnDefinition = "TEXT")
+    private String deviceUsername;                                                      //用户名
+
+    @Column(name = "device_pwd", columnDefinition = "TEXT")
+    private String devicePwd;                                                         //密码
 
     public Integer getDeviceId() {
         return deviceId;
@@ -107,5 +113,21 @@ public class Device {
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public String getDeviceUsername() {
+        return deviceUsername;
+    }
+
+    public void setDeviceUsername(String deviceUsername) {
+        this.deviceUsername = deviceUsername;
+    }
+
+    public String getDevicePwd() {
+        return devicePwd;
+    }
+
+    public void setDevicePwd(String devicePwd) {
+        this.devicePwd = devicePwd;
     }
 }

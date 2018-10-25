@@ -1,20 +1,20 @@
-package com.ray.resourcemanage.action;
+package com.ray.resourcemanage.deviceManage.action;
 
 import com.ray.resourcemanage.constant.ConstResponse;
-import com.ray.resourcemanage.dao.IDeviceDao;
-import com.ray.resourcemanage.dto.DeviceDto;
-import com.ray.resourcemanage.entity.Device;
+import com.ray.resourcemanage.deviceManage.dao.IDeviceDao;
+import com.ray.resourcemanage.deviceManage.dto.DeviceDto;
+import com.ray.resourcemanage.deviceManage.entity.Device;
 import com.ray.resourcemanage.entity.SearchEntity;
 import com.ray.resourcemanage.entity.SearchResult;
-import com.ray.resourcemanage.service.DeviceService;
-import com.ray.resourcemanage.service.LogService;
+import com.ray.resourcemanage.deviceManage.service.DeviceService;
+import com.ray.resourcemanage.logManage.service.LogService;
+import com.ray.resourcemanage.userManage.bean.SysUser;
 import com.ray.resourcemanage.util.BaseResponse;
 import com.ray.resourcemanage.util.RequestUtil;
 import com.ray.resourcemanage.util.ResultUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,16 +51,24 @@ public class DeviceAction {
 
     @RequestMapping("/getAllDevice")
     public BaseResponse getAllDevice(@RequestBody DeviceDto deviceDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>)authentication.getAuthorities();
+        SysUser sysUser = (SysUser) authentication.getPrincipal();
+        String username = sysUser.getUsername();
+        String isPrivate = deviceDto.getIsPrivate();
         String deviceStatus = deviceDto.getDeviceStatus();
         String deviceType = deviceDto.getDeviceType();
         String searchValue = deviceDto.getSearchValue();
         Integer pagesize = deviceDto.getPagesize();
         Integer pageIndex = deviceDto.getPageIndex();
         SearchEntity searchEntity = new SearchEntity();
+        Map<String, Object> searchOther = new HashMap<>();
+        if(!StringUtils.isEmpty(username)&&isPrivate.equals("true")){
+            searchOther.put("owner",username);
+        }
         if (StringUtils.isEmpty(deviceStatus)&&StringUtils.isEmpty(deviceType)) {
             searchEntity.setSearchOther(null);
         } else {
-            Map<String, Object> searchOther = new HashMap<>();
             searchOther.put("deviceStatus", deviceStatus);
             searchOther.put("deviceType", deviceType);
             searchEntity.setSearchOther(searchOther);
@@ -74,8 +82,7 @@ public class DeviceAction {
         searchEntity.setPageSize(pagesize);
         SearchResult<Device> searchResult = deviceService.findByPageAndParams(searchEntity);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        List<GrantedAuthority> authorities = (List<GrantedAuthority>)authentication.getAuthorities();
+
         return ResultUtil.authResult(authorities, searchResult, authentication);
     }
 
@@ -89,6 +96,16 @@ public class DeviceAction {
         logService.logInfo("添加了设备名称：{}，序列号：{}，拥有者：{}，ip：{}，备注：{}", device.getDeviceName(), device.getSerialNumber(), device.getOwner(), ip, device.getRemark());
 
         return new BaseResponse("success");
+    }
+
+    //添加设备时显示拥有者
+    @RequestMapping("/showOwner")
+    public BaseResponse addDevice() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SysUser sysUser = (SysUser) authentication.getPrincipal();
+        String username = sysUser.getUsername();
+
+        return new BaseResponse(username);
     }
 
 

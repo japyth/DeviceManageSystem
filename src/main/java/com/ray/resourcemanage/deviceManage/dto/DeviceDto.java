@@ -1,9 +1,10 @@
-package com.ray.resourcemanage.dto;
+package com.ray.resourcemanage.deviceManage.dto;
 
 public class DeviceDto {
     private String deviceStatus;
     private String deviceType;
     private String searchValue;
+    private String isPrivate;
     private Integer pagesize;
     private Integer pageIndex;
 
@@ -45,5 +46,13 @@ public class DeviceDto {
 
     public void setPageIndex(Integer pageIndex) {
         this.pageIndex = pageIndex;
+    }
+
+    public String getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(String isPrivate) {
+        this.isPrivate = isPrivate;
     }
 }
