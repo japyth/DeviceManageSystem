@@ -18,13 +18,13 @@ var vm = new Vue({
                         localStorage.setItem("token",response.headers.authorization);
                         window.location.href = "/index.html";
                     }
-
                 });
         },
-        init: function () {
 
+        visitorButton: function () {
+            localStorage.setItem("token","");
+            window.location.href = "/index.html";
         }
-
 
     }
 })

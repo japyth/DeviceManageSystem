@@ -10,26 +10,32 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(69,161,168,1);">
-    <a href="#" class="navbar-brand mb-0 h1"><img src="lib/image/seal.png" style="width:45px;margin-right:15px"/>综合安防海豹设备管理平台</a>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="index.html">主页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="log/log.html">日志</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="user/user.html">用户管理</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-
 <div id="app">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(69,161,168,1);">
+        <a href="#" class="navbar-brand mb-0 h1"><img src="lib/image/seal.png" style="width:45px;margin-right:15px"/>综合安防海豹设备管理平台</a>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">主页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="log/log.html">日志</a>
+                </li>
+                <li class="nav-item" v-if="showUser">
+                    <a class="nav-link" href="user/user.html">用户管理</a>
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <img v-if="showUser" @click="login" src="image/登出.png" height="25" width="25"
+                 onmouseover="this.src='image/登出黑.png'" onmouseout="this.src='image/登出.png'"/>
+
+            <img v-if="!showUser" @click="login" src="image/登录.png" height="25" width="25"
+                 onmouseover="this.src='image/登录黑.png'" onmouseout="this.src='image/登录.png'"/>
+        </div>
+    </nav>
 
     <!--查询-->
     <div class="form-inline" style="margin-top: 20px;margin-bottom: 20px">
@@ -64,7 +70,7 @@
             <input id="searchValue" v-model="searchValue" type="text" class="form-control" placeholder="搜索  (设备名称/设备类型/序列号/拥有者/借用者/备注)" style="width:50%">
         </div>
 
-        <div class="tg-list-item">
+        <div class="tg-list-item" v-if="showUser">
                 <input class="tgl tgl-skewed" id="cb3" type="checkbox" v-model="isPrivate"/>
                 <label class="tgl-btn" data-tg-off="所有" data-tg-on="个人" for="cb3"></label>
         </div>
@@ -75,30 +81,32 @@
         <table class="table table-hover" style="word-break:break-all;">
             <thead class="thead-light">
             <tr>
-                <th scope="col" style="width: 5%; text-align:center">序号</th>
+                <th scope="col" style="width: 3%; text-align:center">序号</th>
                 <th scope="col" style="width: 12%; text-align:center">设备名称</th>
                 <th scope="col" style="width: 6%; text-align:center">设备类型</th>
                 <th scope="col" style="width: 10%; text-align:center">序列号</th>
-                <th scope="col" style="width: 6%; text-align:center">拥有者</th>
-                <th scope="col" style="width: 6%; text-align:center">借用者</th>
+                <th scope="col" style="width: 5%; text-align:center" v-if="!isPrivate">拥有者</th>
+                <th scope="col" style="width: 5%; text-align:center">借用者</th>
                 <th scope="col" style="width: 10%; text-align:center">备注</th>
                 <th scope="col" style="width: 5%; text-align:center" v-if="isPrivate">用户名</th>
                 <th scope="col" style="width: 5%; text-align:center" v-if="isPrivate">密码</th>
-                <th scope="col" style="width: 10%; text-align:center">修改时间</th>
+                <th scope="col" style="width: 8%; text-align:center" v-if="isPrivate">ip</th>
+                <th scope="col" style="width: 8%; text-align:center">修改时间</th>
                 <th scope="col" style="width: 15%; text-align:center" v-if="showUser">操作</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="(item, index) in deviceList">
-                <th scope="row">{{ index + 1 }}</th>
+                <th style="text-align:center" scope="row">{{ index + 1 }}</th>
                 <td style="text-align:center">{{ item.deviceName }}</td>
                 <td style="text-align:center">{{ item.deviceType }}</td>
                 <td style="text-align:center">{{ item.serialNumber}}</td>
-                <td style="text-align:center">{{ item.owner }}</td>
+                <td style="text-align:center" v-if="!isPrivate">{{ item.owner }}</td>
                 <td style="text-align:center">{{ item.borrower }}</td>
                 <td style="text-align:center">{{ item.remark }}</td>
                 <td style="text-align:center" v-if="isPrivate">{{ item.deviceUsername }}</td>
                 <td style="text-align:center" v-if="isPrivate">{{ item.devicePwd }}</td>
+                <td style="text-align:center" v-if="isPrivate">{{ item.deviceIp }}</td>
                 <td style="text-align:center">{{ item.updateTime }}</td>
                 <td style="text-align:center" v-if="showUser">
                     <div v-if="item.back">
@@ -187,6 +195,11 @@
                         <div class="form-group">
                             <label class="col-form-label">密码</label>
                             <input type="text" class="form-control" v-model="device.devicePwd">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-form-label">ip</label>
+                            <input type="text" class="form-control" v-model="device.deviceIp">
                         </div>
 
                         <div class="form-group">
@@ -280,6 +293,11 @@
                         <div class="form-group">
                             <label class="col-form-label">密码</label>
                             <input type="text" class="form-control" v-model="modifyDevice.devicePwd">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-form-label">ip</label>
+                            <input type="text" class="form-control" v-model="modifyDevice.deviceIp">
                         </div>
 
                         <div class="form-group">

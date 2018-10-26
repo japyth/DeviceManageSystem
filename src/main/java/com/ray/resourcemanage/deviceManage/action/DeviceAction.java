@@ -10,6 +10,7 @@ import com.ray.resourcemanage.deviceManage.service.DeviceService;
 import com.ray.resourcemanage.logManage.service.LogService;
 import com.ray.resourcemanage.userManage.bean.SysUser;
 import com.ray.resourcemanage.util.BaseResponse;
+import com.ray.resourcemanage.util.ConstParam;
 import com.ray.resourcemanage.util.RequestUtil;
 import com.ray.resourcemanage.util.ResultUtil;
 import org.apache.commons.logging.Log;
@@ -51,10 +52,6 @@ public class DeviceAction {
 
     @RequestMapping("/getAllDevice")
     public BaseResponse getAllDevice(@RequestBody DeviceDto deviceDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        List<GrantedAuthority> authorities = (List<GrantedAuthority>)authentication.getAuthorities();
-        SysUser sysUser = (SysUser) authentication.getPrincipal();
-        String username = sysUser.getUsername();
         String isPrivate = deviceDto.getIsPrivate();
         String deviceStatus = deviceDto.getDeviceStatus();
         String deviceType = deviceDto.getDeviceType();
@@ -63,7 +60,14 @@ public class DeviceAction {
         Integer pageIndex = deviceDto.getPageIndex();
         SearchEntity searchEntity = new SearchEntity();
         Map<String, Object> searchOther = new HashMap<>();
-        if(!StringUtils.isEmpty(username)&&isPrivate.equals("true")){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>)authentication.getAuthorities();
+
+        if(authorities.size() == 1 && authorities.get(0).getAuthority().equals(ConstParam.ROLE_VISITOR)){
+
+        }else if(isPrivate.equals("true")){
+            SysUser sysUser = (SysUser) authentication.getPrincipal();
+            String username = sysUser.getUsername();
             searchOther.put("owner",username);
         }
         if (StringUtils.isEmpty(deviceStatus)&&StringUtils.isEmpty(deviceType)) {
@@ -104,8 +108,9 @@ public class DeviceAction {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SysUser sysUser = (SysUser) authentication.getPrincipal();
         String username = sysUser.getUsername();
-
-        return new BaseResponse(username);
+        Device device = new Device();
+        device.setOwner(username);
+        return new BaseResponse(device);
     }
 
 

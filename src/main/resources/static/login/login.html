@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>设备管理平台</title>
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="login.css" crossorigin="anonymous">
 </head>
 <body>
 
@@ -13,21 +14,18 @@
 
 
 <div id="app">
-    <div class="form-inline">
-        <div class='col-sm-6 form-inline' style="max-width:30%">
-            <label class="col-form-label">用户名：</label>
-            <input type='text' class="form-control" v-model="userName"/>
+    <div class="login_box">
+        <div class="login_l_img"><img src="images/login-img.png" /></div>
+        <div class="login">
+            <div class="login_logo"><a href="#"><img src="images/login_logo.png" /></a></div>
+            <div class="login_name">
+                <p>欢迎登陆</p>
+            </div>
+            <input name="username" type="text" v-model="userName" placeholder="用户名">
+            <input name="password" type="password" v-model="password" placeholder="密码"/>
+            <a class="pull-right" href="#" @click="visitorButton"> 游客模式>>>></a>
+            <input value="登录" style="width:100%;" type="submit" @click="loginButton">
         </div>
-
-        <div class='col-sm-6 form-inline' style="max-width:30%">
-            <label class="col-form-label">密码：</label>
-            <input type='text' class="form-control" v-model="password"/>
-        </div>
-        <div class='col-sm-6 form-inline' style="max-width:30%">
-            <button type="button" class="btn btn-primary" @click="loginButton" style="margin: 20px 0 20px 20px">登录
-            </button>
-        </div>
-
     </div>
 </div>
 <script src="../lib/vue/axios.min.js" crossorigin="anonymous"></script>

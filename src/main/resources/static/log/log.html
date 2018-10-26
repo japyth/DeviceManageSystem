@@ -11,27 +11,24 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(69,161,168,1);">
-    <a href="#" class="navbar-brand mb-0 h1"><img src="../lib/image/seal.png" style="width:45px;margin-right: 15px"/>综合安防海豹设备管理平台</a>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="../index.html">主页</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="log.html">日志</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../user/user.html">用户管理</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-
 <div id="app">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(69,161,168,1);">
+        <a href="#" class="navbar-brand mb-0 h1"><img src="../lib/image/seal.png" style="width:45px;margin-right: 15px"/>综合安防海豹设备管理平台</a>
 
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="../index.html">主页</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="log.html">日志</a>
+                </li>
+                <li class="nav-item" v-if="showUser">
+                    <a class="nav-link" href="../user/user.html">用户管理</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     <div class="form-inline">
         <div class="label-group">

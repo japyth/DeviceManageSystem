@@ -38,7 +38,7 @@ var vm = new Vue({
             this.init();
         },
         isPrivate: function (newValue, oldValue) {
-            vm.showPage(1, null, true);
+            this.init();
         }
     },
     methods: {
@@ -82,7 +82,7 @@ var vm = new Vue({
                                 vm.showAuth(roleList);
                             }
                             if (vm.deviceList.length === 0) {
-                                alert("查询结果为空，请检查SQL")
+                                alert("查询结果为空，请检查SQL");
                             }else{
                                 vm.pageCurrent = pageIndex;
                                 vm.pageCount = data.data.totalPage;
@@ -161,8 +161,7 @@ var vm = new Vue({
                 .then(function (response) {
                     if (response.data.result === true) {
                         var data = response.data;
-                        var owner = data.data;
-                        $('#deviceOwner').val(owner);
+                        vm.device = data.data;
                     }
                     else {
                         alert(data.errorMessage ? data.errorMessage : "请求异常");
@@ -269,8 +268,12 @@ var vm = new Vue({
         init: function () {
             //初始化页面
             $(function () {
-                vm.showPage(vm.pageCurrent, null, true);
+                vm.showPage(1, null, true);
             });
+        },
+
+        login: function () {
+            window.location.href = "../login/login.html";
         }
     }
 });

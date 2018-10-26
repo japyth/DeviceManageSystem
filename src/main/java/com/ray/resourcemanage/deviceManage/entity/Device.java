@@ -43,6 +43,9 @@ public class Device {
     @Column(name = "device_pwd", columnDefinition = "TEXT")
     private String devicePwd;                                                         //密码
 
+    @Column(name = "device_ip", columnDefinition = "TEXT")
+    private String deviceIp;                                                  //设备ip
+
     public Integer getDeviceId() {
         return deviceId;
     }
@@ -129,5 +132,13 @@ public class Device {
 
     public void setDevicePwd(String devicePwd) {
         this.devicePwd = devicePwd;
+    }
+
+    public String getDeviceIp() {
+        return deviceIp;
+    }
+
+    public void setDeviceIp(String deviceIp) {
+        this.deviceIp = deviceIp;
     }
 }

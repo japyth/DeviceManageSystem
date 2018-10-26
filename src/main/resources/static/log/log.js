@@ -17,8 +17,6 @@ var vm = new Vue({
         showPagesStart: 1,
         //结束显示的分页按钮
         showPageEnd: 20
-
-
     },
     created: function () {
         this.init();
