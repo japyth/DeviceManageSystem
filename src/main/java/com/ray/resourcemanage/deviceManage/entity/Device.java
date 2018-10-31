@@ -19,7 +19,7 @@ public class Device {
     @Column(name = "device_type", length = 254)
     private String deviceType;                                                            //设备类型
 
-    @Column(name = "owner",length = 254)
+    @Column(name = "owner", length = 254)
     private String owner;                                                                     //拥有者
 
     @Column(name = "borrower", length = 254)
@@ -27,6 +27,9 @@ public class Device {
 
     @Column(name = "is_back", columnDefinition = "BOOLEAN")
     private Boolean isBack;                                                                 //是否归还
+
+    @Column(name = "back_time")                                                           //预计归还时间
+    private Date backTime;
 
     @Column(name = "serial_number")
     private String serialNumber;                                                            //设备序列号
@@ -45,6 +48,14 @@ public class Device {
 
     @Column(name = "device_ip", columnDefinition = "TEXT")
     private String deviceIp;                                                  //设备ip
+
+    public Date getBackTime() {
+        return backTime;
+    }
+
+    public void setBackTime(Date backTime) {
+        this.backTime = backTime;
+    }
 
     public Integer getDeviceId() {
         return deviceId;

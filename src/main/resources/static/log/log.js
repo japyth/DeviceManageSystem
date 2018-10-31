@@ -130,11 +130,11 @@ var vm = new Vue({
                 var startTime = moment().subtract('days', 6).format('YYYY-MM-DD HH:mm:ss');
                 $('#datetimepicker1').datetimepicker({
                     defaultDate: startTime,
-                    format: "YYYY-MM-DD HH:mm:ss",
+                    format: "YYYY-MM-DD HH:mm:ss"
                 });
                 $('#datetimepicker2').datetimepicker({
                     defaultDate: new Date(),
-                    format: "YYYY-MM-DD HH:mm:ss",
+                    format: "YYYY-MM-DD HH:mm:ss"
                 });
                 vm.showPage(vm.pageCurrent, null, true);
             });

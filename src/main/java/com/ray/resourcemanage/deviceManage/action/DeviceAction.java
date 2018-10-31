@@ -134,6 +134,8 @@ public class DeviceAction {
 
             deviceFromDB.setBack(false);
             deviceFromDB.setBorrower(device.getBorrower());
+
+            deviceFromDB.setBackTime(device.getBackTime());
             deviceFromDB.setUpdateTime(new Date());
 
             deviceService.saveDevice(deviceFromDB);
@@ -165,6 +167,7 @@ public class DeviceAction {
 
             String borrower = deviceFromDB.getBorrower();
             deviceFromDB.setBorrower("");
+            deviceFromDB.setBackTime(null);
             deviceFromDB.setBack(true);
             deviceFromDB.setUpdateTime(new Date());
 

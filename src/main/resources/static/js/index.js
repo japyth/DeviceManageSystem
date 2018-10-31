@@ -2,17 +2,17 @@ var vm = new Vue({
     el: '#app',
     data: {
         username: "visitor",
-        showAdmin:false,
-        showUser:false,
+        showAdmin: false,
+        showUser: false,
         deviceList: [],         //table列表
         device: {},             //新增的设备
         deviceStatus: 0,       //设备状态
-        deviceType:"设备类型",
+        deviceType: "设备类型",
         borrowDevice: {},         //借出设备
         modifyDevice: {},          //修改的设备
         deleteDevice: {},      //删除的设备
         searchValue: "",
-        isPrivate:false,
+        isPrivate: false,
         fDisabled: false,
         lDisabled: false,
         totalCount: 200,
@@ -67,9 +67,9 @@ var vm = new Vue({
                     isPrivate: vm.isPrivate,
                     pageIndex: pageIndex,
                     pagesize: vm.pagesize
-                },{
+                }, {
                     headers: {
-                        "Authorization" : localStorage.getItem("token")
+                        "Authorization": localStorage.getItem("token")
                     }
                 })
                     .then(function (response) {
@@ -78,18 +78,26 @@ var vm = new Vue({
                             vm.deviceList = data.data.rows;
                             vm.username = data.username;
                             var roleList = data.roles;
-                            if(roleList!==null){
+                            if (roleList !== null) {
                                 vm.showAuth(roleList);
                             }
                             if (vm.deviceList.length === 0) {
                                 alert("查询结果为空，请检查SQL");
-                            }else{
+                            } else {
                                 vm.pageCurrent = pageIndex;
                                 vm.pageCount = data.data.totalPage;
                                 vm.totalCount = data.data.totalCount;
                                 vm.deviceList.forEach(function (item) {
                                     if (item.updateTime) {
                                         item.updateTime = moment(item.updateTime).format("YYYY-MM-DD HH:mm:ss")
+                                    }
+                                    if(item.backTime) {
+                                        item.backTime = moment(item.backTime).format("YYYY-MM-DD HH:mm:ss");
+                                        if(item.backTime>moment(new Date()).format("YYYY-MM-DD HH:mm:ss")) {
+                                            item.noBack = false;
+                                        } else {
+                                            item.noBack = true;
+                                        }
                                     }
                                 });
                             }
@@ -101,7 +109,7 @@ var vm = new Vue({
                 //处理分页按钮的样式
                 var buttons = $("#pager").find("span");
                 for (var i = 0; i < buttons.length; i++) {
-                    if(buttons.eq(i).html() === pageIndex.toString()){
+                    if (buttons.eq(i).html() === pageIndex.toString()) {
                         buttons.eq(i).addClass("active");
                     } else {
                         buttons.eq(i).removeClass("active");
@@ -109,7 +117,7 @@ var vm = new Vue({
                 }
 
                 //如果当前页首页或者尾页，则上一页首页就不能点击，下一页尾页就不能点击
-                if(vm.pageCount === 1){
+                if (vm.pageCount === 1) {
                     vm.lDisabled = true;
                     vm.fDisabled = true;
                 } else if (pageIndex === 1) {
@@ -142,20 +150,20 @@ var vm = new Vue({
         },
         //判断用户具有哪些权限
         showAuth: function (roleList) {
-            for(var i in roleList) {
-                if(roleList[i] === "user") {
+            for (var i in roleList) {
+                if (roleList[i] === "user") {
                     vm.showUser = true;
                 }
-                if(roleList[i] === "admin") {
+                if (roleList[i] === "admin") {
                     vm.showAdmin = true;
                 }
             }
         },
 
         openAddDialog: function () {
-            axios.get("api/device/showOwner",{
+            axios.get("api/device/showOwner", {
                 headers: {
-                    "Authorization" : localStorage.getItem("token")
+                    "Authorization": localStorage.getItem("token")
                 }
             })
                 .then(function (response) {
@@ -171,7 +179,7 @@ var vm = new Vue({
         },
 
         addDevice: function () {
-            if(vm.device.deviceName&&vm.device.deviceType&&vm.device.deviceType&&vm.device.serialNumber&&vm.device.owner){
+            if (vm.device.deviceName && vm.device.deviceType && vm.device.deviceType && vm.device.serialNumber && vm.device.owner) {
                 $.post(getHost() + "api/device/addDevice", vm.device)
                     .done(function (data) {
                         if (data.result === true) {
@@ -196,6 +204,7 @@ var vm = new Vue({
 
         borrowDialogButton: function () {
             if (vm.borrowDevice.borrower) {
+                vm.borrowDevice.backTime = $('#backTime').val();
                 $.post(getHost() + "api/device/borrowDevice", vm.borrowDevice)
                     .done(function (data) {
                         if (data.result === true) {
@@ -268,6 +277,10 @@ var vm = new Vue({
         init: function () {
             //初始化页面
             $(function () {
+                $('#datetimepicker1').datetimepicker({
+                    defaultDate: new Date(),
+                    format: "YYYY-MM-DD HH:mm:ss"
+                });
                 vm.showPage(1, null, true);
             });
         },

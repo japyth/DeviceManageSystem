@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="lib/datetimepicker/css/font-awesome.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="lib/datetimepicker/css/tempusdominus-bootstrap-4.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="user/user.css" crossorigin="anonymous">
 </head>
 <body>
@@ -40,11 +41,12 @@
     <!--查询-->
     <div class="form-inline" style="margin-top: 20px;margin-bottom: 20px">
         <div class="form-group mb-2">
-            <button v-if="showUser" type="button" class="btn btn-outline-primary" @click="openAddDialog" style="margin-left: 20px">添加设备
+            <button v-if="showUser" type="button" class="btn btn-outline-primary" @click="openAddDialog"
+                    style="margin-left: 20px">添加设备
             </button>
         </div>
 
-        <div class="form-group mb-2" style="width: 50%;margin-left: 25%;margin-right: 10%" >
+        <div class="form-group mb-2" style="width: 50%;margin-left: 25%;margin-right: 10%">
             <div class="form-group">
                 <select class="form-control" v-model="deviceStatus" v-on:change="showPage(1,$event,true)">
                     <option value="0">所有设备</option>
@@ -67,12 +69,13 @@
                     <option value="其他">其他</option>
                 </select>
             </div>
-            <input id="searchValue" v-model="searchValue" type="text" class="form-control" placeholder="搜索  (设备名称/设备类型/序列号/拥有者/借用者/备注)" style="width:50%">
+            <input id="searchValue" v-model="searchValue" type="text" class="form-control"
+                   placeholder="搜索  (设备名称/设备类型/序列号/拥有者/借用者/备注)" style="width:50%">
         </div>
 
         <div class="tg-list-item" v-if="showUser">
-                <input class="tgl tgl-skewed" id="cb3" type="checkbox" v-model="isPrivate"/>
-                <label class="tgl-btn" data-tg-off="所有" data-tg-on="个人" for="cb3"></label>
+            <input class="tgl tgl-skewed" id="cb3" type="checkbox" v-model="isPrivate"/>
+            <label class="tgl-btn" data-tg-off="所有" data-tg-on="个人" for="cb3"></label>
         </div>
     </div>
 
@@ -91,7 +94,7 @@
                 <th scope="col" style="width: 5%; text-align:center" v-if="isPrivate">用户名</th>
                 <th scope="col" style="width: 5%; text-align:center" v-if="isPrivate">密码</th>
                 <th scope="col" style="width: 8%; text-align:center" v-if="isPrivate">ip</th>
-                <th scope="col" style="width: 8%; text-align:center">修改时间</th>
+                <th scope="col" style="width: 8%; text-align:center">预计归还时间</th>
                 <th scope="col" style="width: 15%; text-align:center" v-if="showUser">操作</th>
             </tr>
             </thead>
@@ -107,7 +110,8 @@
                 <td style="text-align:center" v-if="isPrivate">{{ item.deviceUsername }}</td>
                 <td style="text-align:center" v-if="isPrivate">{{ item.devicePwd }}</td>
                 <td style="text-align:center" v-if="isPrivate">{{ item.deviceIp }}</td>
-                <td style="text-align:center">{{ item.updateTime }}</td>
+                <td v-if="item.noBack" style="text-align:center;background: red" style="text-align:center">{{ item.backTime }}</td>
+                <td v-else style="text-align:center">{{ item.backTime }}</td>
                 <td style="text-align:center" v-if="showUser">
                     <div v-if="item.back">
                         <button type="button" class="btn btn-outline-success btn-sm" @click="borrowButton(item)">借出</button>
@@ -125,7 +129,8 @@
     <!--分页-->
     <div class="pager" id="pager" style="text-align: center">
         <span>
-            <select  class="btn btn-outline-dark dropdown-toggle btn-sm" v-model="pagesize" v-on:change="showPage(pageCurrent,$event,true)" number>
+            <select class="btn btn-outline-dark dropdown-toggle btn-sm" v-model="pagesize"
+                    v-on:change="showPage(pageCurrent,$event,true)" number>
                 <option value="10">10</option>
                 <option value="20">20</option>
                 <option value="30">30</option>
@@ -133,15 +138,21 @@
             </select>
         </span>
         <span v-for="item in pageCount">
-            <span v-if="item==1" class="btn btn-outline-dark btn-sm" v-on:click="showPage(1,$event)" :class="{'disabled':fDisabled}">首页</span>
-            <span v-if="item==1" class="btn btn-outline-dark btn-sm" v-on:click="showPage(pageCurrent-1,$event)" :class="{'disabled':fDisabled}">上一页</span>
+            <span v-if="item==1" class="btn btn-outline-dark btn-sm" v-on:click="showPage(1,$event)"
+                  :class="{'disabled':fDisabled}">首页</span>
+            <span v-if="item==1" class="btn btn-outline-dark btn-sm" v-on:click="showPage(pageCurrent-1,$event)"
+                  :class="{'disabled':fDisabled}">上一页</span>
             <span v-if="item==1" class="btn btn-outline-dark btn-sm" v-on:click="showPage(item,$event)">{{item}}</span>
             <span v-if="item==1&&item<showPagesStart-1" class="btn btn-outline-dark btn-sm disabled">...</span>
-            <span v-if="item>1&&item<=pageCount-1&&item>=showPagesStart&&item<=showPageEnd&&item<=pageCount" class="btn btn-outline-dark btn-sm" v-on:click="showPage(item,$event)">{{item}}</span>
+            <span v-if="item>1&&item<=pageCount-1&&item>=showPagesStart&&item<=showPageEnd&&item<=pageCount"
+                  class="btn btn-outline-dark btn-sm" v-on:click="showPage(item,$event)">{{item}}</span>
             <span v-if="item==pageCount&&item>showPageEnd+1" class="btn btn-outline-dark btn-sm disabled">...</span>
-            <span v-if="item==pageCount&&pageCount!=1" class="btn btn-outline-dark btn-sm" v-on:click="showPage(item,$event)"  >{{item}}</span>
-            <span v-if="item==pageCount" class="btn btn-outline-dark btn-sm" v-on:click="showPage(pageCurrent+1,$event)" :class="{'disabled':lDisabled}">下一页</span>
-            <span v-if="item==pageCount" class="btn btn-outline-dark btn-sm" v-on:click="showPage(pageCount,$event)" :class="{'disabled':lDisabled}">尾页</span>
+            <span v-if="item==pageCount&&pageCount!=1" class="btn btn-outline-dark btn-sm"
+                  v-on:click="showPage(item,$event)">{{item}}</span>
+            <span v-if="item==pageCount" class="btn btn-outline-dark btn-sm" v-on:click="showPage(pageCurrent+1,$event)"
+                  :class="{'disabled':lDisabled}">下一页</span>
+            <span v-if="item==pageCount" class="btn btn-outline-dark btn-sm" v-on:click="showPage(pageCount,$event)"
+                  :class="{'disabled':lDisabled}">尾页</span>
         </span>
         <span class="btn btn-outline-dark btn-sm disabled">{{pageCurrent}}/{{pageCount}}</span>
     </div>
@@ -233,6 +244,19 @@
                             <label class="col-form-label">借用人</label>
                             <input type="text" class="form-control" v-model="borrowDevice.borrower">
                         </div>
+                        <div class="form-group">
+                            <label class="col-form-label">预计归还时间</label>
+                            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                <input id="backTime" type="text"
+                                       class="form-control datetimepicker-input" data-target="#datetimepicker1"/>
+                                <div class="input-group-append" data-target="#datetimepicker1"
+                                     data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -344,11 +368,12 @@
 </div>
 <script src="lib/vue/axios.min.js" crossorigin="anonymous"></script>
 <script src="lib/vue/vue.js" crossorigin="anonymous"></script>
-
+<script src="lib/moment/moment.min.js"></script>
 <script src="lib/jquery/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
 <script src="lib/popper/popper.min.js" crossorigin="anonymous"></script>
 <script src="lib/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
-<script src="lib/moment/moment.min.js"></script>
+<script src="lib/datetimepicker/js/tempusdominus-bootstrap-4.min.js" crossorigin="anonymous"></script>
+
 <script src="js/const.js"></script>
 <script src="js/index.js"></script>
 
