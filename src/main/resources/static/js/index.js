@@ -74,6 +74,7 @@ var vm = new Vue({
                 })
                     .then(function (response) {
                         if (response.data.result === true) {
+                            debugger;
                             var data = response.data;
                             vm.deviceList = data.data.rows;
                             vm.username = data.username;
@@ -179,7 +180,7 @@ var vm = new Vue({
         },
 
         addDevice: function () {
-            if (vm.device.deviceName && vm.device.deviceType && vm.device.deviceType && vm.device.serialNumber && vm.device.owner) {
+            if (vm.device.deviceName && vm.device.deviceType && vm.device.serialNumber && vm.device.owner) {
                 $.post(getHost() + "api/device/addDevice", vm.device)
                     .done(function (data) {
                         if (data.result === true) {

@@ -47,19 +47,18 @@
         <table class="table table-hover" style="word-break:break-all;">
             <thead class="thead-light">
             <tr>
-                <th scope="col" style="width: 5%">序号</th>
-                <th scope="col" style="width: 20%">姓名</th>
-                <th scope="col" style="width: 15%">权限</th>
-                <th scope="col" style="width: 15%">操作</th>
+                <th scope="col" style="width: 5%;text-align: center">序号</th>
+                <th scope="col" style="width: 20%;text-align: center">姓名</th>
+                <th scope="col" style="width: 15%;text-align: center">权限</th>
+                <th scope="col" style="width: 15%;text-align: center">操作</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="(item, index) in userList">
-                <th scope="row">{{ index + 1 }}</th>
-                <td>{{ item.username }}</td>
-                <td>{{ item.roles }}</td>
-                <td>
-                    <button type="button" class="btn btn-outline-success btn-sm" @click="authorizeButton(item)">授权</button>
+                <th scope="row" style="text-align: center">{{ index + 1 }}</th>
+                <td style="text-align: center">{{ item.username }}</td>
+                <td style="text-align: center">{{ item.roles }}</td>
+                <td style="text-align: center">
                     <button type="button" class="btn btn-outline-dark btn-sm" @click="modifyButton(item)">修改</button>
                     <button type="button" class="btn btn-outline-danger btn-sm" @click="deleteButton(item)">删除</button>
                 </td>
@@ -175,8 +174,34 @@
         </div>
     </div>
 
+    <!--删除设备模态框-->
+    <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">删除用户</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="form-group">
+                            <label class="col-form-label">是否删除用户{{deleteUser.username}}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" @click="deleteDialogButton()">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--授权模态框-->
-    <div class="modal fade" id="authorizeUserModal" tabindex="-1" role="dialog" aria-labelledby="authorizeUserModalLabel"
+    <!--<div class="modal fade" id="authorizeUserModal" tabindex="-1" role="dialog" aria-labelledby="authorizeUserModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -211,7 +236,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
 </div>

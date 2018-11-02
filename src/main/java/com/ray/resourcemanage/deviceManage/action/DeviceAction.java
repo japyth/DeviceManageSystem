@@ -64,7 +64,7 @@ public class DeviceAction {
         List<GrantedAuthority> authorities = (List<GrantedAuthority>)authentication.getAuthorities();
 
         if(authorities.size() == 1 && authorities.get(0).getAuthority().equals(ConstParam.ROLE_VISITOR)){
-
+            logService.logInfo("this is visitor");
         }else if(isPrivate.equals("true")){
             SysUser sysUser = (SysUser) authentication.getPrincipal();
             String username = sysUser.getUsername();

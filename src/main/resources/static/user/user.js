@@ -2,11 +2,12 @@ var vm = new Vue({
     el: '#app',
     data: {
         username: "visitor",
-        showAdmin:false,
-        showUser:false,
+        showAdmin: false,
+        showUser: false,
         userList: [],         //table列表
         user: {},             //新增的人员
         modifyUser: {},
+        deleteUser: {},
         authorizeUser: {},
         searchValue: "",
         fDisabled: false,
@@ -57,9 +58,9 @@ var vm = new Vue({
                     searchValue: searchValue,
                     pageIndex: pageIndex,
                     pagesize: vm.pagesize
-                },{
+                }, {
                     headers: {
-                        "Authorization" : localStorage.getItem("token")
+                        "Authorization": localStorage.getItem("token")
                     }
                 })
                     .then(function (response) {
@@ -68,12 +69,12 @@ var vm = new Vue({
                             vm.userList = data.data.rows;
                             vm.username = data.username;
                             var roleList = data.roles;
-                            if(roleList!==null){
+                            if (roleList !== null) {
                                 vm.showAuth(roleList);
                             }
                             if (vm.userList.length === 0) {
                                 alert("查询结果为空，请检查SQL")
-                            }else{
+                            } else {
                                 vm.pageCurrent = pageIndex;
                                 vm.pageCount = data.data.totalPage;
                                 vm.totalCount = data.data.totalCount;
@@ -86,7 +87,7 @@ var vm = new Vue({
                 //处理分页按钮的样式
                 var buttons = $("#pager").find("span");
                 for (var i = 0; i < buttons.length; i++) {
-                    if(buttons.eq(i).html() === pageIndex.toString()){
+                    if (buttons.eq(i).html() === pageIndex.toString()) {
                         buttons.eq(i).addClass("active");
                     } else {
                         buttons.eq(i).removeClass("active");
@@ -94,7 +95,7 @@ var vm = new Vue({
                 }
 
                 //如果当前页首页或者尾页，则上一页首页就不能点击，下一页尾页就不能点击
-                if(vm.pageCount === 1){
+                if (vm.pageCount === 1) {
                     vm.lDisabled = true;
                     vm.fDisabled = true;
                 } else if (pageIndex === 1) {
@@ -127,11 +128,11 @@ var vm = new Vue({
         },
         //判断用户具有哪些权限
         showAuth: function (roleList) {
-            for(var i in roleList) {
-                if(roleList[i] === "user") {
+            for (var i in roleList) {
+                if (roleList[i] === "user") {
                     vm.showUser = true;
                 }
-                if(roleList[i] === "admin") {
+                if (roleList[i] === "admin") {
                     vm.showAdmin = true;
                 }
             }
@@ -142,13 +143,13 @@ var vm = new Vue({
         },
 
         addUser: function () {
-            if(vm.user.username){
-                axios.post("/api/admin/addUser", vm.user,{
+            if (vm.user.username) {
+                axios.post("/api/admin/addUser", vm.user, {
                     headers: {
-                        "Authorization" : localStorage.getItem("token")
+                        "Authorization": localStorage.getItem("token")
                     }
                 })
-                    .then(function(response){
+                    .then(function (response) {
                         if (response.data.result === true) {
                             vm.showPage(1, null, true);
                             $('#addUserModal').modal('hide');
@@ -168,14 +169,14 @@ var vm = new Vue({
             vm.modifyUser = JSON.parse(JSON.stringify(theUser));
             //页面上显示的是拼接之后的权限
             var roles = vm.modifyUser.roles;
-            if(roles == null){
+            if (roles == null) {
                 vm.modifyUser.adminAuth = false;
                 vm.modifyUser.userAuth = false;
             }
-            if(roles.indexOf("超级管理员")>=0) {
+            if (roles.indexOf("超级管理员") >= 0) {
                 vm.modifyUser.adminAuth = true;
             }
-            if(roles.indexOf("设备管理员")>=0) {
+            if (roles.indexOf("设备管理员") >= 0) {
                 vm.modifyUser.userAuth = true;
             }
             $('#modifyUserModal').modal('show');
@@ -195,7 +196,7 @@ var vm = new Vue({
                             vm.modifyUser = {};     //清空内容
                         }
                         else {
-                           // alert(data.errorMessage ? data.errorMessage : "请求异常");
+                            alert(data.errorMessage ? data.errorMessage : "请求异常");
                         }
                     })
             } else {
@@ -208,24 +209,16 @@ var vm = new Vue({
         },
 
         deleteDialogButton: function () {
-            $.post(getHost() + "api/admin/deleteUser", vm.deleteUser)
-                .done(function (data) {
-                    if (data.result === true) {
+            axios.post(getHost() + "api/admin/deleteUser", vm.deleteUser, {
+                headers: {
+                    "Authorization": localStorage.getItem("token")
+                }
+            })
+                .then(function (response) {
+                    if (response.data.result === true) {
                         vm.showPage(1, null, true);
                         $('#deleteUserModal').modal('hide');
                         vm.deleteUser = {};     //清空内容
-                    }
-                    else {
-                        alert(data.errorMessage ? data.errorMessage : "请求异常");
-                    }
-                })
-        },
-
-        returnButton: function (theUser) {
-            $.post(getHost() + "api/admin/returnUser", theUser)
-                .done(function (data) {
-                    if (data.result === true) {
-                        vm.showPage(1, null, true);
                     }
                     else {
                         alert(data.errorMessage ? data.errorMessage : "请求异常");

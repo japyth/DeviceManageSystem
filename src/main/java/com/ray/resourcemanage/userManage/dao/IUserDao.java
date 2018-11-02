@@ -9,4 +9,5 @@ import java.io.Serializable;
 public interface IUserDao extends JpaRepository<SysUser, Serializable>,JpaSpecificationExecutor<SysUser> {
     SysUser findByUsername(String username);
     SysUser findByUserId(Integer userId);
+    SysUser findByUsernameAndPassword(String username, String password);
 }

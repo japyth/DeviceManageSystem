@@ -1,15 +1,13 @@
 package com.ray.resourcemanage.userManage.action;
 
+import com.ray.resourcemanage.constant.ConstResponse;
 import com.ray.resourcemanage.entity.SearchEntity;
 import com.ray.resourcemanage.entity.SearchResult;
 import com.ray.resourcemanage.userManage.bean.SysRole;
 import com.ray.resourcemanage.userManage.bean.SysUser;
 import com.ray.resourcemanage.userManage.dao.IRoleDao;
 import com.ray.resourcemanage.userManage.dao.IUserDao;
-import com.ray.resourcemanage.userManage.dto.AddUserDto;
-import com.ray.resourcemanage.userManage.dto.ModifyUserDto;
-import com.ray.resourcemanage.userManage.dto.UserReqDto;
-import com.ray.resourcemanage.userManage.dto.UserResDto;
+import com.ray.resourcemanage.userManage.dto.*;
 import com.ray.resourcemanage.userManage.service.UserService;
 import com.ray.resourcemanage.util.BaseResponse;
 import com.ray.resourcemanage.util.BcryptUtil;
@@ -20,10 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,6 +35,7 @@ public class UserAction {
     IUserDao userDao;
     @Autowired
     IRoleDao roleDao;
+
     @RequestMapping("/getAllUser")
     public BaseResponse getAllUser(@RequestBody UserReqDto userReqDto) {
         String searchValue = userReqDto.getSearchValue();
@@ -56,7 +52,7 @@ public class UserAction {
         SearchResult<SysUser> searchResult = userService.findByPageAndParams(searchEntity);
         List<SysUser> sysUsers = searchResult.getRows();
         List<UserResDto> userResDtos = new ArrayList<>();
-        if(sysUsers!=null && sysUsers.size()>0){
+        if (sysUsers != null && sysUsers.size() > 0) {
             for (SysUser sysUser : sysUsers) {
                 UserResDto userResDto = new UserResDto();
                 userResDto.setUserId(sysUser.getUserId());
@@ -64,12 +60,12 @@ public class UserAction {
                 Set<SysRole> sysRoleSet = sysUser.getSysRoleSet();
                 StringBuilder roleBuilder = new StringBuilder();
                 String roles = "";
-                if(sysRoleSet!=null && sysRoleSet.size()>0) {
+                if (sysRoleSet != null && sysRoleSet.size() > 0) {
                     for (SysRole sysRole : sysRoleSet) {
                         roleBuilder.append(sysRole.getRemark()).append(",");
                     }
                     roles = roleBuilder.toString();
-                    roles = roles.substring(0,roles.length()-1);
+                    roles = roles.substring(0, roles.length() - 1);
                 }
                 userResDto.setRoles(roles);
                 userResDtos.add(userResDto);
@@ -80,22 +76,22 @@ public class UserAction {
         searchResultRes.setTotalCount(searchResult.getTotalCount());
         searchResultRes.setTotalPage(searchResult.getTotalPage());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        List<GrantedAuthority> authorities = (List<GrantedAuthority>)authentication.getAuthorities();
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
         return ResultUtil.authResult(authorities, searchResultRes, authentication);
     }
 
     @RequestMapping("/addUser")
     public BaseResponse getAllUser(@RequestBody AddUserDto addUserDto) {
-        if(addUserDto!=null) {
+        if (addUserDto != null) {
             SysUser user = new SysUser();
             user.setUsername(addUserDto.getUsername());
             user.setHaveDevice(false);
             user.setPassword(BcryptUtil.bcryptEncode(ConstParam.INIT_PASSWORD));
             Set<SysRole> roles = new HashSet<>();
-            if(addUserDto.getAdminAuth()){
+            if (addUserDto.getAdminAuth()) {
                 roles.add(roleDao.findByRoleName("admin"));
             }
-            if(addUserDto.getUserAuth()){
+            if (addUserDto.getUserAuth()) {
                 roles.add(roleDao.findByRoleName("user"));
             }
             user.setSysRoleSet(roles);
@@ -108,15 +104,15 @@ public class UserAction {
 
     @RequestMapping("/modifyUser")
     public BaseResponse getAllUser(@RequestBody ModifyUserDto modifyUserDto) {
-        if(modifyUserDto!=null) {
+        if (modifyUserDto != null) {
             SysUser userFromDb = userDao.findByUserId(modifyUserDto.getUserId());
             userFromDb.setUsername(modifyUserDto.getUsername());
             userFromDb.setHaveDevice(false);
             Set<SysRole> roles = new HashSet<>();
-            if(modifyUserDto.isAdminAuth()){
+            if (modifyUserDto.isAdminAuth()) {
                 roles.add(roleDao.findByRoleName("admin"));
             }
-            if(modifyUserDto.isUserAuth()){
+            if (modifyUserDto.isUserAuth()) {
                 roles.add(roleDao.findByRoleName("user"));
             }
             userFromDb.setSysRoleSet(roles);
@@ -127,6 +123,17 @@ public class UserAction {
         }
     }
 
+    @RequestMapping("/deleteUser")
+    public BaseResponse getAllUser(@RequestBody DeleteUserDto deleteUserDto) {
+        if (deleteUserDto != null) {
+            String username = deleteUserDto.getUsername();
+            SysUser sysUser = userDao.findByUsername(username);
+            userDao.deleteById(sysUser.getUserId());
+            return new BaseResponse("success");
+        } else {
+            return new BaseResponse(false);
+        }
+    }
 
 
 }

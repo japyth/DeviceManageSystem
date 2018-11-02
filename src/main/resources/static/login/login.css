@@ -22,6 +22,18 @@ input[type=submit], input[type=button] { display: inline-block; vertical-align: 
     color: #27A9E3
 }
 
+.pull-left {
+    float: left;
+    color: #999;
+    transition: color 1s cubic-bezier(.19,1,.22,1);
+    font-size: 15px;
+    margin-bottom: 15px;
+    line-height: 0.5;
+}
+.pull-left:hover {
+    color: #27A9E3
+}
+
 a{text-decoration: none;}
 a:visited{text-decoration: none;}
 a:hover {text-decoration: none;}
