@@ -77,6 +77,16 @@
             <input class="tgl tgl-skewed" id="cb3" type="checkbox" v-model="isPrivate"/>
             <label class="tgl-btn" data-tg-off="所有" data-tg-on="个人" for="cb3"></label>
         </div>
+
+
+        <button v-if="showUser" type="button" class="btn btn-outline-primary" @click="importExcel"
+                style="margin-left: 20px">导入
+        </button>
+
+        <button v-if="showUser" type="button" class="btn btn-outline-primary" @click="outputExcel"
+                style="margin-left: 20px">导出
+        </button>
+
     </div>
 
     <!--表格-->

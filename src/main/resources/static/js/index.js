@@ -288,6 +288,30 @@ var vm = new Vue({
 
         login: function () {
             window.location.href = "../login/login.html";
+        },
+
+        importExcel: function () {
+
+        },
+
+        outputExcel: function () {
+            var searchValue = $('#searchValue').val();
+
+            $.post(getHost() + "api/device/outputExcel",
+                {
+                    deviceStatus: vm.deviceStatus,
+                    searchValue: searchValue,
+                    deviceType: vm.deviceType,
+                    isPrivate: vm.isPrivate
+                })
+                .done(function (data) {
+                    if (data.result === true) {
+                        
+                    }
+                    else {
+                        alert(data.errorMessage ? data.errorMessage : "请求异常");
+                    }
+                })
         }
     }
 });

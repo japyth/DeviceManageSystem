@@ -9,10 +9,7 @@ import com.ray.resourcemanage.entity.SearchResult;
 import com.ray.resourcemanage.deviceManage.service.DeviceService;
 import com.ray.resourcemanage.logManage.service.LogService;
 import com.ray.resourcemanage.userManage.bean.SysUser;
-import com.ray.resourcemanage.util.BaseResponse;
-import com.ray.resourcemanage.util.ConstParam;
-import com.ray.resourcemanage.util.RequestUtil;
-import com.ray.resourcemanage.util.ResultUtil;
+import com.ray.resourcemanage.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,16 +58,16 @@ public class DeviceAction {
         SearchEntity searchEntity = new SearchEntity();
         Map<String, Object> searchOther = new HashMap<>();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        List<GrantedAuthority> authorities = (List<GrantedAuthority>)authentication.getAuthorities();
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
 
-        if(authorities.size() == 1 && authorities.get(0).getAuthority().equals(ConstParam.ROLE_VISITOR)){
-            logService.logInfo("this is visitor");
-        }else if(isPrivate.equals("true")){
+        if (authorities.size() == 1 && authorities.get(0).getAuthority().equals(ConstParam.ROLE_VISITOR)) {
+
+        } else if (isPrivate.equals("true")) {
             SysUser sysUser = (SysUser) authentication.getPrincipal();
             String username = sysUser.getUsername();
-            searchOther.put("owner",username);
+            searchOther.put("owner", username);
         }
-        if (StringUtils.isEmpty(deviceStatus)&&StringUtils.isEmpty(deviceType)) {
+        if (StringUtils.isEmpty(deviceStatus) && StringUtils.isEmpty(deviceType)) {
             searchEntity.setSearchOther(null);
         } else {
             searchOther.put("deviceStatus", deviceStatus);
@@ -186,9 +183,8 @@ public class DeviceAction {
     }
 
 
-
     @RequestMapping("/deleteDevice")
-    public BaseResponse deleteDevice(Integer deviceId){
+    public BaseResponse deleteDevice(Integer deviceId) {
         try {
 
             lock.lock();
@@ -214,10 +210,10 @@ public class DeviceAction {
     public BaseResponse modifyDevice(Device device) {
         try {
             lock.lock();
-            if(device.getDeviceName()==null){
+            if (device.getDeviceName() == null) {
                 return new BaseResponse(false, ConstResponse.ERROR_CODE, "设备名称不能为空");
             }
-            if(device.getOwner()==null){
+            if (device.getOwner() == null) {
                 return new BaseResponse(false, ConstResponse.ERROR_CODE, "拥有者不能为空");
             }
             Device deviceFromDB = deviceDao.findByDeviceId(device.getDeviceId());
@@ -231,7 +227,9 @@ public class DeviceAction {
             deviceFromDB.setRemark(device.getRemark());
             deviceFromDB.setDeviceType(device.getDeviceType());
             deviceFromDB.setSerialNumber(device.getSerialNumber());
-
+            deviceFromDB.setDeviceName(device.getDeviceName());
+            deviceFromDB.setDevicePwd(device.getDevicePwd());
+            deviceFromDB.setDeviceIp(device.getDeviceIp());
             deviceService.saveDevice(deviceFromDB);
             String ip = RequestUtil.getCurrentIp();
             logService.logInfo("修改了设备， 设备名称：{}，序列号：{}，拥有者：{}，ip：{}，备注：{}", device.getDeviceName(), device.getSerialNumber(), device.getOwner(), ip, device.getRemark());
@@ -239,11 +237,48 @@ public class DeviceAction {
         } catch (Exception e) {
             log.error(e);
             return new BaseResponse(false, ConstResponse.ERROR_CODE, "服务器内部错误");
-        }finally {
+        } finally {
             lock.unlock();
         }
         return new BaseResponse("success");
     }
 
+    @RequestMapping("outputExcel")
+    public BaseResponse outputExcel(String deviceStatus, String searchValue, String deviceType, String isPrivate) {
+        Integer pagesize = 10000;
+        Integer pageIndex = 1;
+        SearchEntity searchEntity = new SearchEntity();
+        Map<String, Object> searchOther = new HashMap<>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
+        if (authorities.size() == 1 && authorities.get(0).getAuthority().equals(ConstParam.ROLE_VISITOR)) {
+            logService.logInfo("this is visitor");
+        } else if (isPrivate.equals("true")) {
+            SysUser sysUser = (SysUser) authentication.getPrincipal();
+            String username = sysUser.getUsername();
+            searchOther.put("owner", username);
+        }
+        if (StringUtils.isEmpty(deviceStatus) && StringUtils.isEmpty(deviceType)) {
+            searchEntity.setSearchOther(null);
+        } else {
+            searchOther.put("deviceStatus", deviceStatus);
+            searchOther.put("deviceType", deviceType);
+            searchEntity.setSearchOther(searchOther);
+        }
+        if (StringUtils.isEmpty(searchValue)) {
+            searchEntity.setSearchValue(null);
+        } else {
+            searchEntity.setSearchValue(searchValue);
+        }
+        searchEntity.setPageIndex(pageIndex);
+        searchEntity.setPageSize(pagesize);
+        SearchResult<Device> searchResult = deviceService.findByPageAndParams(searchEntity);
+        try {
+            ExcelPoiUtil.output(searchResult);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new BaseResponse("success");
+    }
 
 }
